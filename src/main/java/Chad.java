@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Chad {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String[] taskList = new String[100];
+        Task[] taskList = new Task[100];
         int taskCounter = 0;
 
         //intro
@@ -27,7 +27,9 @@ public class Chad {
                 System.out.println("\tBye. Hope to see you again soon!");
                 System.out.println("\t___________________________________");
                 break;
-            } else if (input.equals("list")) {
+            }
+            
+            if (input.equals("list")) {
                 System.out.println("\t___________________________________");
                 for (int i = 0; i < taskCounter; i++) {
                     System.out.println("\t" + (i + 1) + ". " + taskList[i]);
@@ -36,7 +38,30 @@ public class Chad {
                 continue;
             }
 
-            taskList[taskCounter] = input;
+            if (input.startsWith("mark ")) {
+                int index = Integer.parseInt(input.substring(5)) - 1; // user uses 1-based indexing
+                taskList[index].markAsDone();
+
+                System.out.println("\t___________________________________");
+                System.out.println("\tNice! I've marked this task as done:");
+                System.out.println("\t  " + taskList[index]);
+                System.out.println("\t___________________________________");
+                continue;
+            }
+
+            if (input.startsWith("unmark ")) {
+                int index = Integer.parseInt(input.substring(7)) - 1;
+                taskList[index].markAsNotDone();
+
+                System.out.println("\t___________________________________");
+                System.out.println("\tOK, I've marked this task as not done yet:");
+                System.out.println("\t  " + taskList[index]);
+                System.out.println("\t___________________________________");
+                continue;
+            }
+
+            // add task tracker
+            taskList[taskCounter] = new Task(input);
             taskCounter++;
             System.out.println("\t___________________________________");
             System.out.println("\tadded: " + input);
