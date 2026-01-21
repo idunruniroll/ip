@@ -21,7 +21,7 @@ public class Chad {
 
         // main loop
         while (true) {
-            String input = sc.nextLine().toLowerCase().trim();   
+            String input = sc.nextLine().trim();   
             if (input.equals("bye")) {
                 System.out.println("\t___________________________________");
                 System.out.println("\tBye. Hope to see you again soon!");
@@ -29,6 +29,7 @@ public class Chad {
                 break;
             }
             
+            // list tasks
             if (input.equals("list")) {
                 System.out.println("\t___________________________________");
                 for (int i = 0; i < taskCounter; i++) {
@@ -38,6 +39,7 @@ public class Chad {
                 continue;
             }
 
+            // mark task as done tracker
             if (input.startsWith("mark ")) {
                 int index = Integer.parseInt(input.substring(5)) - 1; // user uses 1-based indexing
                 taskList[index].markAsDone();
@@ -49,6 +51,7 @@ public class Chad {
                 continue;
             }
 
+            // unmark task as not done tracker
             if (input.startsWith("unmark ")) {
                 int index = Integer.parseInt(input.substring(7)) - 1;
                 taskList[index].markAsNotDone();
@@ -56,6 +59,54 @@ public class Chad {
                 System.out.println("\t___________________________________");
                 System.out.println("\tOK, I've marked this task as not done yet:");
                 System.out.println("\t  " + taskList[index]);
+                System.out.println("\t___________________________________");
+                continue;
+            }
+
+            // todo
+            if (input.startsWith("todo ")) {
+                String desc = input.substring(5).trim();
+                taskList[taskCounter++] = new Todo(desc);
+
+                System.out.println("\t___________________________________");
+                System.out.println("\tGot it. I've added this task:");
+                System.out.println("\t  " + taskList[taskCounter - 1]);
+                System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
+                System.out.println("\t___________________________________");
+                continue;
+            }
+
+            // deadline
+            if (input.startsWith("deadline ")) {
+                String[] parts = input.substring(9).split(" /by ", 2);
+                String desc = parts[0].trim();
+                String doneBy = parts[1].trim();
+
+                taskList[taskCounter++] = new Deadline(desc, doneBy);
+
+                System.out.println("\t___________________________________");
+                System.out.println("\tGot it. I've added this task:");
+                System.out.println("\t  " + taskList[taskCounter - 1]);
+                System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
+                System.out.println("\t___________________________________");
+                continue;
+            }
+
+            // event
+            if (input.startsWith("event ")) {
+                String[] parts = input.substring(6).split(" /from ", 2);
+                String desc = parts[0].trim();
+
+                String[] times = parts[1].split(" /to ", 2);
+                String from = times[0].trim();
+                String to = times[1].trim();
+
+                taskList[taskCounter++] = new Event(desc, from, to);
+
+                System.out.println("\t___________________________________");
+                System.out.println("\tGot it. I've added this task:");
+                System.out.println("\t  " + taskList[taskCounter - 1]);
+                System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
                 System.out.println("\t___________________________________");
                 continue;
             }
