@@ -130,6 +130,32 @@ public class Chad {
                 }
                 continue;
             }
+
+            // delete task
+            if (input.startsWith("delete ")) {
+                try {
+                    int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                    Task removed = taskList[index];
+
+                    // shift tasks left
+                    for (int i = index; i < taskCounter - 1; i++) {
+                        taskList[i] = taskList[i + 1];
+                    }
+
+                    taskList[taskCounter - 1] = null;
+                    taskCounter--;
+
+                    System.out.println("\t___________________________________");
+                    System.out.println("\tNoted. I've removed this task:");
+                    System.out.println("\t  " + removed);
+                    System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
+                    System.out.println("\t___________________________________");
+
+                } catch (Exception e) {
+                    printError("Invalid task number for delete.");
+                }
+                continue;
+            }
             
             printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
 
