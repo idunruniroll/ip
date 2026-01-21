@@ -20,7 +20,7 @@ public class Chad {
         System.out.println("___________________________________");
 
         // main loop
-        while (true) {
+        while (sc.hasNextLine()) {
             String input = sc.nextLine().trim();   
             if (input.equals("bye")) {
                 System.out.println("\t___________________________________");
@@ -41,30 +41,44 @@ public class Chad {
 
             // mark task as done tracker
             if (input.startsWith("mark ")) {
-                int index = Integer.parseInt(input.substring(5)) - 1; // user uses 1-based indexing
-                taskList[index].markAsDone();
+                try {
+                    int index = Integer.parseInt(input.substring(5).trim()) - 1;
+                    taskList[index].markAsDone();
 
-                System.out.println("\t___________________________________");
-                System.out.println("\tNice! I've marked this task as done:");
-                System.out.println("\t  " + taskList[index]);
-                System.out.println("\t___________________________________");
+                    System.out.println("\t___________________________________");
+                    System.out.println("\tNice! I've marked this task as done:");
+                    System.out.println("\t  " + taskList[index]);
+                    System.out.println("\t___________________________________");
+
+                } catch (Exception e) {
+                    printError("OOPS!!! Invalid task number for mark.");
+                }
                 continue;
             }
 
             // unmark task as not done tracker
             if (input.startsWith("unmark ")) {
-                int index = Integer.parseInt(input.substring(7)) - 1;
-                taskList[index].markAsNotDone();
+                try {
+                    int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                    taskList[index].markAsNotDone();
 
-                System.out.println("\t___________________________________");
-                System.out.println("\tOK, I've marked this task as not done yet:");
-                System.out.println("\t  " + taskList[index]);
-                System.out.println("\t___________________________________");
+                    System.out.println("\t___________________________________");
+                    System.out.println("\tOK, I've marked this task as not done yet:");
+                    System.out.println("\t  " + taskList[index]);
+                    System.out.println("\t___________________________________");
+
+                } catch (Exception e) {
+                    printError("OOPS!!! Invalid task number for unmark.");
+                }
                 continue;
             }
-
             // todo
-            if (input.startsWith("todo ")) {
+            if (input.startsWith("todo")) {
+                if (input.length() <= 4) {
+                    printError("OOPS!!! The description of a todo cannot be empty.");
+                    continue;
+                }
+
                 String desc = input.substring(5).trim();
                 taskList[taskCounter++] = new Todo(desc);
 
@@ -77,48 +91,65 @@ public class Chad {
             }
 
             // deadline
-            if (input.startsWith("deadline ")) {
-                String[] parts = input.substring(9).split(" /by ", 2);
-                String desc = parts[0].trim();
-                String doneBy = parts[1].trim();
+            if (input.startsWith("deadline")) {
+                try {
+                    String[] parts = input.substring(9).split(" /by ", 2);
+                    if (parts.length < 2 || parts[0].trim().isEmpty()) {
+                        throw new IllegalArgumentException();
+                    }
 
-                taskList[taskCounter++] = new Deadline(desc, doneBy);
+                    taskList[taskCounter++] = new Deadline(parts[0].trim(), parts[1].trim());
+                    System.out.println("\t___________________________________");
+                    System.out.println("\tGot it. I've added this task:");
+                    System.out.println("\t  " + taskList[taskCounter - 1]);
+                    System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
+                    System.out.println("\t___________________________________");
 
-                System.out.println("\t___________________________________");
-                System.out.println("\tGot it. I've added this task:");
-                System.out.println("\t  " + taskList[taskCounter - 1]);
-                System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
-                System.out.println("\t___________________________________");
+                } catch (Exception e) {
+                    printError("OOPS!!! Deadline format: deadline <desc> /by <time>");
+                }
                 continue;
             }
 
             // event
-            if (input.startsWith("event ")) {
-                String[] parts = input.substring(6).split(" /from ", 2);
-                String desc = parts[0].trim();
+            if (input.startsWith("event")) {
+                try {
+                    String[] parts = input.substring(6).split(" /from ", 2);
+                    String[] times = parts[1].split(" /to ", 2);
 
-                String[] times = parts[1].split(" /to ", 2);
-                String from = times[0].trim();
-                String to = times[1].trim();
+                    taskList[taskCounter++] = new Event(parts[0].trim(), times[0].trim(), times[1].trim());
 
-                taskList[taskCounter++] = new Event(desc, from, to);
+                    System.out.println("\t___________________________________");
+                    System.out.println("\tGot it. I've added this task:");
+                    System.out.println("\t  " + taskList[taskCounter - 1]);
+                    System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
+                    System.out.println("\t___________________________________");
 
-                System.out.println("\t___________________________________");
-                System.out.println("\tGot it. I've added this task:");
-                System.out.println("\t  " + taskList[taskCounter - 1]);
-                System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
-                System.out.println("\t___________________________________");
+                } catch (Exception e) {
+                    printError("OOPS!!! Event format: event <desc> /from <start> /to <end>");
+                }
                 continue;
             }
+            
+            printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
 
-            // add task tracker
-            taskList[taskCounter] = new Task(input);
-            taskCounter++;
-            System.out.println("\t___________________________________");
-            System.out.println("\tadded: " + input);
-            System.out.println("\t___________________________________");
+            // Remove as tasks are added based on TODO/Event/Deadline.
+            // // add task tracker
+            // taskList[taskCounter] = new Task(input);
+            // taskCounter++;
+            // System.out.println("\t___________________________________");
+            // System.out.println("\tadded: " + input);
+            // System.out.println("\t___________________________________");
         }
         sc.close();
     }
+
+    // error message printer
+    private static void printError(String message) {
+        System.out.println("\t___________________________________");
+        System.out.println("\t" + message);
+        System.out.println("\t___________________________________");
+    }
+
 }
 
