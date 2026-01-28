@@ -1,10 +1,22 @@
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Chad {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Task[] taskList = new Task[100];
-        int taskCounter = 0;
+        Save save = new Save(Paths.get("data/chad.txt"));
+        ArrayList<Task> taskList = new ArrayList<>();
+
+        try {
+            taskList = save.load();
+        } catch (ChadException e) {
+            taskList = new ArrayList<>();
+            System.out.println("___________________________________");
+            System.out.println("Warning: could not load saved data. Starting fresh.");
+            System.out.println("___________________________________");
+        }
+        int taskCounter = taskList.size();
 
         //intro
         String logo = "       _               _ \n"
@@ -33,7 +45,7 @@ public class Chad {
             if (input.equals("list")) {
                 System.out.println("\t___________________________________");
                 for (int i = 0; i < taskCounter; i++) {
-                    System.out.println("\t" + (i + 1) + ". " + taskList[i]);
+                    System.out.println("\t" + (i + 1) + ". " + taskList.get(i));
                 }
                 System.out.println("\t___________________________________");
                 continue;
@@ -43,11 +55,12 @@ public class Chad {
             if (input.startsWith("mark ")) {
                 try {
                     int index = Integer.parseInt(input.substring(5).trim()) - 1;
-                    taskList[index].markAsDone();
+                    taskList.get(index).markAsDone();
+                    save.save(taskList); 
 
                     System.out.println("\t___________________________________");
                     System.out.println("\tNice! I've marked this task as done:");
-                    System.out.println("\t  " + taskList[index]);
+                    System.out.println("\t  " + taskList.get(index));
                     System.out.println("\t___________________________________");
 
                 } catch (Exception e) {
@@ -60,11 +73,12 @@ public class Chad {
             if (input.startsWith("unmark ")) {
                 try {
                     int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                    taskList[index].markAsNotDone();
+                    taskList.get(index).markAsNotDone();
+                    save.save(taskList); 
 
                     System.out.println("\t___________________________________");
                     System.out.println("\tOK, I've marked this task as not done yet:");
-                    System.out.println("\t  " + taskList[index]);
+                    System.out.println("\t  " + taskList.get(index));
                     System.out.println("\t___________________________________");
 
                 } catch (Exception e) {
@@ -80,11 +94,18 @@ public class Chad {
                 }
 
                 String desc = input.substring(5).trim();
-                taskList[taskCounter++] = new Todo(desc);
+                Task t = new Todo(desc);
+                taskList.add(t);
+                taskCounter++;
+                try {
+                    save.save(taskList);
+                } catch (ChadException e) {
+                    printError("OOPS!!! Failed to save tasks.");
+                }
 
                 System.out.println("\t___________________________________");
                 System.out.println("\tGot it. I've added this task:");
-                System.out.println("\t  " + taskList[taskCounter - 1]);
+                System.out.println("\t  " + taskList.get(taskCounter - 1));
                 System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
                 System.out.println("\t___________________________________");
                 continue;
@@ -94,14 +115,18 @@ public class Chad {
             if (input.startsWith("deadline")) {
                 try {
                     String[] parts = input.substring(9).split(" /by ", 2);
-                    if (parts.length < 2 || parts[0].trim().isEmpty()) {
+                    if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
                         throw new IllegalArgumentException();
                     }
 
-                    taskList[taskCounter++] = new Deadline(parts[0].trim(), parts[1].trim());
+                    Task t = new Deadline(parts[0].trim(), parts[1].trim());
+                    taskList.add(t);
+                    taskCounter++;
+                    save.save(taskList);
+
                     System.out.println("\t___________________________________");
                     System.out.println("\tGot it. I've added this task:");
-                    System.out.println("\t  " + taskList[taskCounter - 1]);
+                    System.out.println("\t  " + taskList.get(taskCounter - 1));
                     System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
                     System.out.println("\t___________________________________");
 
@@ -114,14 +139,24 @@ public class Chad {
             // event
             if (input.startsWith("event")) {
                 try {
-                    String[] parts = input.substring(6).split(" /from ", 2);
-                    String[] times = parts[1].split(" /to ", 2);
+                    String[] parts = input.substring(5).trim().split(" /from ", 2);
+                    if (parts.length < 2 || parts[0].trim().isEmpty()) {
+                        throw new IllegalArgumentException();
+                    }
 
-                    taskList[taskCounter++] = new Event(parts[0].trim(), times[0].trim(), times[1].trim());
+                    String[] times = parts[1].split(" /to ", 2);
+                    if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
+                        throw new IllegalArgumentException();
+                    }
+
+                    Task t = new Event(parts[0].trim(), times[0].trim(), times[1].trim());
+                    taskList.add(t);
+                    taskCounter++;
+                    save.save(taskList);
 
                     System.out.println("\t___________________________________");
                     System.out.println("\tGot it. I've added this task:");
-                    System.out.println("\t  " + taskList[taskCounter - 1]);
+                    System.out.println("\t  " + taskList.get(taskCounter - 1));
                     System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
                     System.out.println("\t___________________________________");
 
@@ -135,15 +170,13 @@ public class Chad {
             if (input.startsWith("delete ")) {
                 try {
                     int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                    Task removed = taskList[index];
-
-                    // shift tasks left
-                    for (int i = index; i < taskCounter - 1; i++) {
-                        taskList[i] = taskList[i + 1];
+                    if (index < 0 || index >= taskCounter) {
+                        throw new IllegalArgumentException();
                     }
 
-                    taskList[taskCounter - 1] = null;
+                    Task removed = taskList.remove(index);
                     taskCounter--;
+                    save.save(taskList);
 
                     System.out.println("\t___________________________________");
                     System.out.println("\tNoted. I've removed this task:");

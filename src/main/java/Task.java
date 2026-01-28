@@ -1,4 +1,4 @@
-public class Task {
+public abstract class Task {
         private final String description;
         private boolean isDone;
 
@@ -15,8 +15,18 @@ public class Task {
             this.isDone = false;
         }
 
+        public String getDescription() {
+            return description;
+        }
+
+        public boolean getIsDone() {
+            return isDone;
+        }
+
         @Override
         public String toString() {
             return (isDone ? "[X] " : "[ ] ") + description;
         }
+
+        public abstract String toSaveString();
     }

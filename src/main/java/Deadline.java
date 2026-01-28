@@ -10,4 +10,9 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]" + super.toString() + " (by: " + doneBy + ")";
     }
+
+    @Override
+    public String toSaveString() {
+        return "D | " + (getIsDone() ? "1" : "0") + " | " + getDescription() + " | " + doneBy;
+    }
 }
