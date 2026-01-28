@@ -1,2 +1,2 @@
-T | 0 | read book
-E | 0 | meeting | Aug 6th 2pm | Aug 6th 4pm
+T | 9 | read book
+T | X | read book
