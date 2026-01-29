@@ -6,6 +6,16 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Saves the current task list to disk.
+ *
+ * @param tasks List of tasks to save.
+ * @throws ChadException If saving fails.
+ * 
+ * @author Yi Qian
+ * @version 1.0
+ * @since 2025-01-30
+ */
 public class Save {
     private final Path filePath;
 
@@ -48,7 +58,8 @@ public class Save {
             for (Task t : tasks) {
                 lines.add(t.toSaveString());
             }
-            Files.write(filePath, lines, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(filePath, lines, StandardCharsets.UTF_8, StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             throw new ChadException("Failed to save data file: " + filePath);
         }

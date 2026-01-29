@@ -2,8 +2,22 @@ package chad;
 
 import java.nio.file.Paths;
 
+/**
+ * Entry point of the Chad chatbot application.
+ * Sets up the UI, parser, storage, and task list, then runs the main input
+ * loop.
+ * 
+ * @author Yi Qian
+ * @version 1.0
+ * @since 2025-01-30
+ */
 public class Chad {
 
+    /**
+     * Starts the chatbot.
+     *
+     * @param args Command-line arguments.
+     */
     public static void main(String[] args) {
         Ui ui = new Ui();
         Parser parser = new Parser();
@@ -17,7 +31,7 @@ public class Chad {
             ui.printFileLoadingError();
         }
 
-        //intro
+        // intro
         ui.intro();
 
         // main loop
@@ -27,8 +41,7 @@ public class Chad {
                 parser.handle(input, taskList, ui, save);
             } catch (ChadException e) {
                 ui.printError(e.getMessage());
-            }                
+            }
         }
     }
 }
-

@@ -1,15 +1,32 @@
 package chad;
 
+import java.util.ArrayList;
 
+/**
+ * Parses and executes user commands by coordinating TaskList, Ui, and Save.
+ * 
+ * @author Yi Qian
+ * @version 1.0
+ * @since 2025-01-30
+ */
 public class Parser {
 
+    /**
+     * Handles a single user command.
+     *
+     * @param input    user input.
+     * @param taskList Task list to operate on.
+     * @param ui       UI to display messages.
+     * @param save     Storage handler for saving/loading to a file.
+     * @throws ChadException If the command is invalid or an operation fails.
+     */
     public void handle(String input, TaskList taskList, Ui ui, Save save) throws ChadException {
         if (input.equals("bye")) {
             ui.exit();
             System.exit(0);
         }
 
-         else if (input.equals("list")) {
+        else if (input.equals("list")) {
             ui.printLine();
 
             if (taskList.size() == 0) {
@@ -71,7 +88,6 @@ public class Parser {
             }
         }
 
-
         else if (input.startsWith("todo")) {
             if (input.length() <= 4 || input.substring(4).trim().isEmpty()) {
                 ui.printError("OOPS!!! The description of a todo cannot be empty.");
@@ -121,7 +137,6 @@ public class Parser {
             }
         }
 
-
         else if (input.startsWith("event")) {
             try {
                 String[] parts = input.substring(5).trim().split(" /from ", 2);
@@ -133,7 +148,6 @@ public class Parser {
                 if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
                     throw new ChadException("OOPS!!! Event format: event <desc> /from <start> /to <end>");
                 }
-
 
                 Task t = new Event(parts[0].trim(), Date.inputDate(times[0].trim()), Date.inputDate(times[1].trim()));
                 taskList.add(t);
@@ -176,8 +190,30 @@ public class Parser {
             }
         }
 
+        else if (input.startsWith("find")) {
+            String keyword = input.substring(4).trim();
+
+            if (keyword.isEmpty()) {
+                ui.printError("OOPS!!! Find format: find <keyword>");
+                return;
+            }
+
+            ArrayList<Task> matches = taskList.find(keyword);
+
+            ui.printLine();
+            if (matches.size() == 0) {
+                System.out.println("\tNo matching tasks found.");
+            } else {
+                System.out.println("\tHere are the matching tasks in your list:");
+                for (int i = 0; i < matches.size(); i++) {
+                    System.out.println("\t" + (i + 1) + ". " + matches.get(i));
+                }
+            }
+            ui.printLine();
+        }
+
         else {
             ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
-        }     
+        }
     }
 }

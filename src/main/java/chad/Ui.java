@@ -2,18 +2,25 @@ package chad;
 
 import java.util.Scanner;
 
+/**
+ * Handles user interaction such as reading commands and printing messages.
+ * 
+ * @author Yi Qian
+ * @version 1.0
+ * @since 2025-01-30
+ */
 public class Ui {
     private final Scanner sc = new Scanner(System.in);
 
     public void intro() {
         String logo = """
-               _               _ 
-              | |             | |
-           ___| |__   __ _  __| |
-          / __| '_ \\ / _` |/ _` |
-         | (__| | | | (_| | (_| |
-          \\___|_| |_|\\__,_|\\__,_|
-        """;
+                       _               _
+                      | |             | |
+                   ___| |__   __ _  __| |
+                  / __| '_ \\ / _` |/ _` |
+                 | (__| | | | (_| | (_| |
+                  \\___|_| |_|\\__,_|\\__,_|
+                """;
 
         printLine();
         System.out.println("Hello! I'm Chad");
@@ -22,6 +29,11 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Reads the next command from the user.
+     *
+     * @return trimmed command string entered by the user.
+     */
     public String input() {
         if (sc.hasNextLine()) {
             return sc.nextLine().trim();
