@@ -144,7 +144,9 @@ public class Parser {
             }
         }
         else {
+            ui.printLine();
             ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
+            ui.printLine();
         }     
     }
 }
