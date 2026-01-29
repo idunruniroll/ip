@@ -35,6 +35,22 @@ public class Parser {
             }
         }
 
+        if (input.startsWith("unmark ")) {
+            try {
+                int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                taskList.get(index).markAsNotDone();
+                save.save(taskList.getTasks()); 
+
+                ui.printLine();
+                System.out.println("\tOK, I've marked this task as not done yet:");
+                System.out.println("\t  " + taskList.get(index));
+                ui.printLine();
+
+            } catch (ChadException e) {
+                ui.printError("OOPS!!! Invalid task number for unmark.");
+            }
+        }
+
         // everything else is still handled in Chad.java
         throw new ChadException("NOT_HANDLED");
     }
