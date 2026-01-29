@@ -6,7 +6,7 @@ public class Parser {
             System.exit(0);
         }
 
-        if (input.equals("list")) {
+         else if (input.equals("list")) {
             ui.printLine();
 
             if (taskList.size() == 0) {
@@ -21,7 +21,7 @@ public class Parser {
             return;
         }
 
-        if (input.startsWith("mark ")) {
+        else if (input.startsWith("mark ")) {
             try {
                 int index = Integer.parseInt(input.substring(5).trim()) - 1;
                 taskList.get(index).markAsDone();
@@ -35,7 +35,7 @@ public class Parser {
             }
         }
 
-        if (input.startsWith("unmark ")) {
+        else if (input.startsWith("unmark ")) {
             try {
                 int index = Integer.parseInt(input.substring(7).trim()) - 1;
                 taskList.get(index).markAsNotDone();
@@ -51,7 +51,7 @@ public class Parser {
             }
         }
 
-        if (input.startsWith("todo")) {
+        else if (input.startsWith("todo")) {
             if (input.length() <= 4) {
                 ui.printError("OOPS!!! The description of a todo cannot be empty.");
             }
@@ -72,7 +72,7 @@ public class Parser {
             ui.printLine();
         }
 
-        if (input.startsWith("deadline")) {
+        else if (input.startsWith("deadline")) {
             try {
                 String[] parts = input.substring(9).split(" /by ", 2);
                 if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
@@ -95,7 +95,7 @@ public class Parser {
             }
         }
 
-        if (input.startsWith("event")) {
+        else if (input.startsWith("event")) {
             try {
                 String[] parts = input.substring(5).trim().split(" /from ", 2);
                 if (parts.length < 2 || parts[0].trim().isEmpty()) {
@@ -123,7 +123,28 @@ public class Parser {
             }
         }
 
-        // everything else is still handled in Chad.java
-        throw new ChadException("NOT_HANDLED");
+        else if (input.startsWith("delete ")) {
+            try {
+                int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                if (index < 0 || index >= taskList.size()) {
+                    throw new ChadException("Invalid task number for delete.");
+                }
+
+                Task removed = taskList.remove(index);
+                save.save(taskList.getTasks());
+
+                ui.printLine();
+                System.out.println("\tNoted. I've removed this task:");
+                System.out.println("\t  " + removed);
+                System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
+                ui.printLine();
+
+            } catch (ChadException e) {
+                ui.printError("Invalid task number for delete.");
+            }
+        }
+        else {
+            ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
+        }     
     }
 }

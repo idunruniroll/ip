@@ -200,27 +200,27 @@ public class Chad {
             // }
 
             // delete task
-            if (input.startsWith("delete ")) {
-                try {
-                    int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                    if (index < 0 || index >= taskList.size()) {
-                        throw new ChadException("Invalid task number for delete.");
-                    }
+            // if (input.startsWith("delete ")) {
+            //     try {
+            //         int index = Integer.parseInt(input.substring(7).trim()) - 1;
+            //         if (index < 0 || index >= taskList.size()) {
+            //             throw new ChadException("Invalid task number for delete.");
+            //         }
 
-                    Task removed = taskList.remove(index);
-                    save.save(taskList.getTasks());
+            //         Task removed = taskList.remove(index);
+            //         save.save(taskList.getTasks());
 
-                    ui.printLine();
-                    System.out.println("\tNoted. I've removed this task:");
-                    System.out.println("\t  " + removed);
-                    System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
-                    ui.printLine();
+            //         ui.printLine();
+            //         System.out.println("\tNoted. I've removed this task:");
+            //         System.out.println("\t  " + removed);
+            //         System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
+            //         ui.printLine();
 
-                } catch (ChadException e) {
-                    ui.printError("Invalid task number for delete.");
-                }
-                continue;
-            }
+            //     } catch (ChadException e) {
+            //         ui.printError("Invalid task number for delete.");
+            //     }
+            //     continue;
+            // }
 
             // Remove comment when PARSER is completed
             // ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
