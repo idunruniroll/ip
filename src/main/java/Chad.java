@@ -1,46 +1,55 @@
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
+// import java.util.Scanner;
 
 public class Chad {
+
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        Ui ui = new Ui();
+        // Scanner sc = new Scanner(System.in);
         Save save = new Save(Paths.get("data/chad.txt"));
         ArrayList<Task> taskList;
 
         try {
             taskList = save.load();
         } catch (ChadException e) {
+            ui.printFileLoadingError();
             taskList = new ArrayList<>();
-            System.out.println("___________________________________");
-            System.out.println("Warning: could not load saved data. Starting fresh.");
-            System.out.println("___________________________________");
+            // More OOP TOREMOVE
+            // System.out.println("___________________________________");
+            // System.out.println("Warning: could not load saved data. Starting fresh.");
+            // System.out.println("___________________________________");
         }
         int taskCounter = taskList.size();
 
         //intro
-        String logo = """
-               _               _ 
-              | |             | |
-           ___| |__   __ _  __| |
-          / __| '_ \\ / _` |/ _` |
-         | (__| | | | (_| | (_| |
-          \\___|_| |_|\\__,_|\\__,_|
-        """;
-        System.out.println("___________________________________");
-        System.out.println("Hello! I'm Chad");
-        System.out.println("What can I do for you?");
-        System.out.println(logo);
-        System.out.println("___________________________________");
+        ui.intro();
+        // More OOP TOREMOVE
+        // String logo = """
+        //        _               _ 
+        //       | |             | |
+        //    ___| |__   __ _  __| |
+        //   / __| '_ \\ / _` |/ _` |
+        //  | (__| | | | (_| | (_| |
+        //   \\___|_| |_|\\__,_|\\__,_|
+        // """;
+        // System.out.println("___________________________________");
+        // System.out.println("Hello! I'm Chad");
+        // System.out.println("What can I do for you?");
+        // System.out.println(logo);
+        // System.out.println("___________________________________");
 
         // main loop
-        while (sc.hasNextLine()) {
-            String input = sc.nextLine().trim();   
+        while (true) {
+            String input = ui.input();   
             if (input.equals("bye")) {
-                System.out.println("\t___________________________________");
-                System.out.println("\tBye. Hope to see you again soon!");
-                System.out.println("\t___________________________________");
+                ui.exit();
                 break;
+                // More OOP TOREMOVE
+                // System.out.println("\t___________________________________");
+                // System.out.println("\tBye. Hope to see you again soon!");
+                // System.out.println("\t___________________________________");
+                // break;
             }
             
             // list tasks
@@ -66,7 +75,7 @@ public class Chad {
                     System.out.println("\t___________________________________");
 
                 } catch (ChadException e) {
-                    printError("OOPS!!! Invalid task number for mark.");
+                    ui.printError("OOPS!!! Invalid task number for mark.");
                 }
                 continue;
             }
@@ -84,14 +93,14 @@ public class Chad {
                     System.out.println("\t___________________________________");
 
                 } catch (ChadException e) {
-                    printError("OOPS!!! Invalid task number for unmark.");
+                    ui.printError("OOPS!!! Invalid task number for unmark.");
                 }
                 continue;
             }
             // todo
             if (input.startsWith("todo")) {
                 if (input.length() <= 4) {
-                    printError("OOPS!!! The description of a todo cannot be empty.");
+                    ui.printError("OOPS!!! The description of a todo cannot be empty.");
                     continue;
                 }
 
@@ -102,7 +111,7 @@ public class Chad {
                 try {
                     save.save(taskList);
                 } catch (ChadException e) {
-                    printError("OOPS!!! Failed to save tasks.");
+                    ui.printError("OOPS!!! Failed to save tasks.");
                 }
 
                 System.out.println("\t___________________________________");
@@ -133,7 +142,7 @@ public class Chad {
                     System.out.println("\t___________________________________");
 
                 } catch (ChadException e) {
-                    printError("OOPS!!! Deadline format: deadline <desc> /by <time>");
+                    ui.printError("OOPS!!! Deadline format: deadline <desc> /by <time>");
                 }
                 continue;
             }
@@ -164,7 +173,7 @@ public class Chad {
                     System.out.println("\t___________________________________");
 
                 } catch (ChadException e) {
-                    printError("OOPS!!! Event format: event <desc> /from <start> /to <end>");
+                    ui.printError("OOPS!!! Event format: event <desc> /from <start> /to <end>");
                 }
                 continue;
             }
@@ -188,12 +197,12 @@ public class Chad {
                     System.out.println("\t___________________________________");
 
                 } catch (ChadException e) {
-                    printError("Invalid task number for delete.");
+                    ui.printError("Invalid task number for delete.");
                 }
                 continue;
             }
-            
-            printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
+
+            ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
 
             // Remove as tasks are added based on TODO/Event/Deadline.
             // // add task tracker
@@ -203,15 +212,17 @@ public class Chad {
             // System.out.println("\tadded: " + input);
             // System.out.println("\t___________________________________");
         }
-        sc.close();
+        // sc.close();
     }
 
-    // error message printer
-    private static void printError(String message) {
-        System.out.println("\t___________________________________");
-        System.out.println("\t" + message);
-        System.out.println("\t___________________________________");
-    }
+    
+    // More OOP
+    // error message printer TOREMOVE
+    // private static void printError(String message) {
+    //     System.out.println("\t___________________________________");
+    //     System.out.println("\t" + message);
+    //     System.out.println("\t___________________________________");
+    // }
 
 }
 
