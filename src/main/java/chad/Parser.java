@@ -1,3 +1,5 @@
+package chad;
+
 public class Parser {
 
     public void handle(String input, TaskList taskList, Ui ui, Save save) throws ChadException {

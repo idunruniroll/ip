@@ -1,6 +1,6 @@
+package chad;
+
 import java.nio.file.Paths;
-// import java.util.ArrayList;
-// import java.util.Scanner;
 
 public class Chad {
 
@@ -26,9 +26,7 @@ public class Chad {
             try {
                 parser.handle(input, taskList, ui, save);
             } catch (ChadException e) {
-                if (!e.getMessage().equals("NOT_HANDLED")) {
-                    ui.printError(e.getMessage());
-                }
+                ui.printError(e.getMessage());
             }                
         }
     }
