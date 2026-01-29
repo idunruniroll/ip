@@ -51,6 +51,27 @@ public class Parser {
             }
         }
 
+        if (input.startsWith("todo")) {
+            if (input.length() <= 4) {
+                ui.printError("OOPS!!! The description of a todo cannot be empty.");
+            }
+
+            String desc = input.substring(5).trim();
+            Task task = new Todo(desc);
+            taskList.add(task);
+            try {
+                save.save(taskList.getTasks());
+            } catch (ChadException e) {
+                ui.printError("OOPS!!! Failed to save tasks.");
+            }
+
+            ui.printLine();
+            System.out.println("\tGot it. I've added this task:");
+            System.out.println("\t  " + task);
+            System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
+            ui.printLine();
+        }
+
         // everything else is still handled in Chad.java
         throw new ChadException("NOT_HANDLED");
     }
