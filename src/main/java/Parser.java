@@ -1,9 +1,24 @@
 public class Parser {
 
-    public void handle(String input, TaskList tasks, Ui ui, Save save) throws ChadException {
+    public void handle(String input, TaskList taskList, Ui ui, Save save) throws ChadException {
         if (input.equals("bye")) {
             ui.exit();
             System.exit(0);
+        }
+
+        if (input.equals("list")) {
+            ui.printLine();
+
+            if (taskList.size() == 0) {
+                System.out.println("\tYour list is empty.");
+            } else {
+                for (int i = 0; i < taskList.size(); i++) {
+                    System.out.println("\t" + (i + 1) + ". " + taskList.get(i));
+                }
+            }
+
+            ui.printLine();
+            return;
         }
 
         // everything else is still handled in Chad.java

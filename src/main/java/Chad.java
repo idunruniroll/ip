@@ -61,23 +61,24 @@ public class Chad {
             //     // break;
             // }
             
+            // Parser MoreOOP TOREMOVE
             // list tasks
-            if (input.equals("list")) {
-                try {
-                    ui.printLine();
-                    if (taskList.size() == 0) {
-                        System.out.println("\tYour list is empty.");
-                    } else {
-                        for (int i = 0; i < taskList.size(); i++) {
-                            System.out.println("\t" + (i + 1) + ". " + taskList.get(i));
-                        }
-                    }
-                    ui.printLine();
-                } catch (ChadException e) {
-                    ui.printError("OOPS!!! Error retrieving tasks.");
-                }
-                continue;
-            }
+            // if (input.equals("list")) {
+            //     try {
+            //         ui.printLine();
+            //         if (taskList.size() == 0) {
+            //             System.out.println("\tYour list is empty.");
+            //         } else {
+            //             for (int i = 0; i < taskList.size(); i++) {
+            //                 System.out.println("\t" + (i + 1) + ". " + taskList.get(i));
+            //             }
+            //         }
+            //         ui.printLine();
+            //     } catch (ChadException e) {
+            //         ui.printError("OOPS!!! Error retrieving tasks.");
+            //     }
+            //     continue;
+            // }
 
             // mark task as done tracker
             if (input.startsWith("mark ")) {
@@ -216,7 +217,8 @@ public class Chad {
                 continue;
             }
 
-            ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
+            // Remove comment when PARSER is completed
+            // ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
 
             // Remove as tasks are added based on TODO/Event/Deadline.
             // // add task tracker
