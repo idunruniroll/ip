@@ -1,3 +1,5 @@
+package chad;
+
 import java.util.Scanner;
 
 public class Ui {
