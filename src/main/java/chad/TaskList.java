@@ -2,6 +2,14 @@ package chad;
 
 import java.util.ArrayList;
 
+/**
+ * Stores and manages the list of tasks in the application.
+ * Provides operations such as add, remove, retrieve, and validate indexes.
+ * 
+ * @author Yi Qian
+ * @version 1.0
+ * @since 2025-01-30
+ */
 public class TaskList {
     private final ArrayList<Task> tasks;
 
@@ -9,6 +17,11 @@ public class TaskList {
         this.tasks = new ArrayList<>();
     }
 
+    /**
+     * Creates a task list initialized with existing tasks.
+     *
+     * @param tasks Existing tasks loaded from storage.
+     */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
@@ -17,6 +30,12 @@ public class TaskList {
         return tasks.size();
     }
 
+    /**
+     * Returns the task at the specified index.
+     *
+     * @param index zero-based index.
+     * @return task at the given index.
+     */
     public Task get(int index) throws ChadException {
         if (index < 0 || index >= tasks.size()) {
             throw new ChadException("OOPS!!! Invalid task number.");
@@ -24,10 +43,22 @@ public class TaskList {
         return tasks.get(index);
     }
 
+    /**
+     * Adds a task to the list.
+     *
+     * @param task Task to add.
+     */
     public void add(Task task) {
         tasks.add(task);
     }
 
+    /**
+     * Removes and returns the task at the specified index after validation.
+     *
+     * @param index zero-based index.
+     * @return removed task.
+     * @throws ChadException If index is invalid.
+     */
     public Task remove(int index) throws ChadException {
         if (index < 0 || index >= tasks.size()) {
             throw new ChadException("OOPS!!! Invalid task number.");
@@ -35,8 +66,26 @@ public class TaskList {
         return tasks.remove(index);
     }
 
-    //TOREMOVE
     public ArrayList<Task> getTasks() {
         return tasks;
     }
+
+    /**
+     * Returns the list of tasks that contain the given keyword.
+     *
+     * @param keyword Keyword to search for.
+     * @return List of matching tasks.
+     */
+    public ArrayList<Task> find(String keyword) {
+        ArrayList<Task> matches = new ArrayList<>();
+        String k = keyword.toLowerCase();
+
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(k)) {
+                matches.add(task);
+            }
+        }
+        return matches;
+    }
+
 }
