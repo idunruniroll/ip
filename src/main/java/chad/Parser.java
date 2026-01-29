@@ -1,5 +1,6 @@
 package chad;
 
+
 public class Parser {
 
     public void handle(String input, TaskList taskList, Ui ui, Save save) throws ChadException {
@@ -26,8 +27,7 @@ public class Parser {
             String numberCheck = input.substring(4).trim();
 
             if (numberCheck.isEmpty()) {
-                ui.printError("OOPS!!! Mark format: mark <task number>");
-                return;
+                throw new ChadException("OOPS!!! Mark format: mark <task number>");
             }
 
             try {
@@ -41,9 +41,9 @@ public class Parser {
                 ui.printLine();
 
             } catch (NumberFormatException e) {
-                ui.printError("OOPS!!! Mark format: mark <task number>");
+                throw new ChadException("OOPS!!! Mark format: mark <task number>");
             } catch (ChadException e) {
-                ui.printError("OOPS!!! Invalid task number for mark.");
+                throw new ChadException("OOPS!!! Invalid task number for mark.");
             }
         }
 
@@ -51,8 +51,7 @@ public class Parser {
             String numberCheck = input.substring(6).trim();
 
             if (numberCheck.isEmpty()) {
-                ui.printError("OOPS!!! Unmark format: unmark <task number>");
-                return;
+                throw new ChadException("OOPS!!! Unmark format: unmark <task number>");
             }
 
             try {
@@ -66,9 +65,9 @@ public class Parser {
                 ui.printLine();
 
             } catch (NumberFormatException e) {
-                ui.printError("OOPS!!! Unmark format: unmark <task number>");
+                throw new ChadException("OOPS!!! Unmark format: unmark <task number>");
             } catch (ChadException e) {
-                ui.printError("OOPS!!! Invalid task number for unmark.");
+                throw new ChadException("OOPS!!! Invalid task number for unmark.");
             }
         }
 
