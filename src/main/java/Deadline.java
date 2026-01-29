@@ -1,14 +1,16 @@
-public class Deadline extends Task {
-    private final String doneBy;
+import java.time.LocalDate;
 
-    public Deadline(String description, String doneBy) {
+public class Deadline extends Task {
+    private final LocalDate doneBy;
+
+    public Deadline(String description, LocalDate doneBy) {
         super(description);
         this.doneBy = doneBy;
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + doneBy + ")";
+        return "[D]" + super.toString() + " (by: " + Date.outputDate(doneBy) + ")";
     }
 
     @Override

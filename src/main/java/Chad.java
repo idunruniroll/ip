@@ -6,7 +6,7 @@ public class Chad {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Save save = new Save(Paths.get("data/chad.txt"));
-        ArrayList<Task> taskList = new ArrayList<>();
+        ArrayList<Task> taskList;
 
         try {
             taskList = save.load();
@@ -19,12 +19,14 @@ public class Chad {
         int taskCounter = taskList.size();
 
         //intro
-        String logo = "       _               _ \n"
-                + "      | |             | |\n"
-                + "   ___| |__   __ _  __| |\n"
-                + "  / __| '_ \\ / _` |/ _` |\n"
-                + " | (__| | | | (_| | (_| |\n"
-                + "  \\___|_| |_|\\__,_|\\__,_|\n";
+        String logo = """
+               _               _ 
+              | |             | |
+           ___| |__   __ _  __| |
+          / __| '_ \\ / _` |/ _` |
+         | (__| | | | (_| | (_| |
+          \\___|_| |_|\\__,_|\\__,_|
+        """;
         System.out.println("___________________________________");
         System.out.println("Hello! I'm Chad");
         System.out.println("What can I do for you?");
@@ -63,7 +65,7 @@ public class Chad {
                     System.out.println("\t  " + taskList.get(index));
                     System.out.println("\t___________________________________");
 
-                } catch (Exception e) {
+                } catch (ChadException e) {
                     printError("OOPS!!! Invalid task number for mark.");
                 }
                 continue;
@@ -81,7 +83,7 @@ public class Chad {
                     System.out.println("\t  " + taskList.get(index));
                     System.out.println("\t___________________________________");
 
-                } catch (Exception e) {
+                } catch (ChadException e) {
                     printError("OOPS!!! Invalid task number for unmark.");
                 }
                 continue;
@@ -119,7 +121,7 @@ public class Chad {
                         throw new IllegalArgumentException();
                     }
 
-                    Task t = new Deadline(parts[0].trim(), parts[1].trim());
+                    Task t = new Deadline(parts[0].trim(), Date.inputDate(parts[1].trim()));
                     taskList.add(t);
                     taskCounter++;
                     save.save(taskList);
@@ -130,7 +132,7 @@ public class Chad {
                     System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
                     System.out.println("\t___________________________________");
 
-                } catch (Exception e) {
+                } catch (ChadException e) {
                     printError("OOPS!!! Deadline format: deadline <desc> /by <time>");
                 }
                 continue;
@@ -149,7 +151,8 @@ public class Chad {
                         throw new IllegalArgumentException();
                     }
 
-                    Task t = new Event(parts[0].trim(), times[0].trim(), times[1].trim());
+
+                    Task t = new Event(parts[0].trim(), Date.inputDate(times[0].trim()), Date.inputDate(times[1].trim()));
                     taskList.add(t);
                     taskCounter++;
                     save.save(taskList);
@@ -160,7 +163,7 @@ public class Chad {
                     System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
                     System.out.println("\t___________________________________");
 
-                } catch (Exception e) {
+                } catch (ChadException e) {
                     printError("OOPS!!! Event format: event <desc> /from <start> /to <end>");
                 }
                 continue;
@@ -184,7 +187,7 @@ public class Chad {
                     System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
                     System.out.println("\t___________________________________");
 
-                } catch (Exception e) {
+                } catch (ChadException e) {
                     printError("Invalid task number for delete.");
                 }
                 continue;
