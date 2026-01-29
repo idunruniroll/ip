@@ -7,7 +7,3 @@ D | 0 | b | 2026-01-30
 T | 0 | read book 2
 T | 0 | read book 3
 T | 0 | read book 4
-D | 1 | read book 5 | 2019-03-29
-D | 0 | read book 5 | 2019-03-31
-D | 0 | read book 10 | 2012-04-23
-D | 0 | read book 10 | 2012-04-30
