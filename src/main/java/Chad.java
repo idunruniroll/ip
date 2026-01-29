@@ -1,5 +1,5 @@
 import java.nio.file.Paths;
-import java.util.ArrayList;
+// import java.util.ArrayList;
 // import java.util.Scanner;
 
 public class Chad {
@@ -8,19 +8,18 @@ public class Chad {
         Ui ui = new Ui();
         // Scanner sc = new Scanner(System.in);
         Save save = new Save(Paths.get("data/chad.txt"));
-        ArrayList<Task> taskList;
+        TaskList taskList;
 
         try {
-            taskList = save.load();
+            taskList = new TaskList(save.load());
         } catch (ChadException e) {
+            taskList = new TaskList();
             ui.printFileLoadingError();
-            taskList = new ArrayList<>();
             // More OOP TOREMOVE
             // System.out.println("___________________________________");
             // System.out.println("Warning: could not load saved data. Starting fresh.");
             // System.out.println("___________________________________");
         }
-        int taskCounter = taskList.size();
 
         //intro
         ui.intro();
@@ -54,11 +53,19 @@ public class Chad {
             
             // list tasks
             if (input.equals("list")) {
-                System.out.println("\t___________________________________");
-                for (int i = 0; i < taskCounter; i++) {
-                    System.out.println("\t" + (i + 1) + ". " + taskList.get(i));
+                try {
+                    ui.printLine();
+                    if (taskList.size() == 0) {
+                        System.out.println("\tYour list is empty.");
+                    } else {
+                        for (int i = 0; i < taskList.size(); i++) {
+                            System.out.println("\t" + (i + 1) + ". " + taskList.get(i));
+                        }
+                    }
+                    ui.printLine();
+                } catch (ChadException e) {
+                    ui.printError("OOPS!!! Error retrieving tasks.");
                 }
-                System.out.println("\t___________________________________");
                 continue;
             }
 
@@ -67,12 +74,12 @@ public class Chad {
                 try {
                     int index = Integer.parseInt(input.substring(5).trim()) - 1;
                     taskList.get(index).markAsDone();
-                    save.save(taskList); 
+                    save.save(taskList.getTasks()); 
 
-                    System.out.println("\t___________________________________");
+                    ui.printLine();
                     System.out.println("\tNice! I've marked this task as done:");
                     System.out.println("\t  " + taskList.get(index));
-                    System.out.println("\t___________________________________");
+                    ui.printLine();
 
                 } catch (ChadException e) {
                     ui.printError("OOPS!!! Invalid task number for mark.");
@@ -85,12 +92,12 @@ public class Chad {
                 try {
                     int index = Integer.parseInt(input.substring(7).trim()) - 1;
                     taskList.get(index).markAsNotDone();
-                    save.save(taskList); 
+                    save.save(taskList.getTasks()); 
 
-                    System.out.println("\t___________________________________");
+                    ui.printLine();
                     System.out.println("\tOK, I've marked this task as not done yet:");
                     System.out.println("\t  " + taskList.get(index));
-                    System.out.println("\t___________________________________");
+                    ui.printLine();
 
                 } catch (ChadException e) {
                     ui.printError("OOPS!!! Invalid task number for unmark.");
@@ -105,20 +112,19 @@ public class Chad {
                 }
 
                 String desc = input.substring(5).trim();
-                Task t = new Todo(desc);
-                taskList.add(t);
-                taskCounter++;
+                Task task = new Todo(desc);
+                taskList.add(task);
                 try {
-                    save.save(taskList);
+                    save.save(taskList.getTasks());
                 } catch (ChadException e) {
                     ui.printError("OOPS!!! Failed to save tasks.");
                 }
 
-                System.out.println("\t___________________________________");
+                ui.printLine();
                 System.out.println("\tGot it. I've added this task:");
-                System.out.println("\t  " + taskList.get(taskCounter - 1));
-                System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
-                System.out.println("\t___________________________________");
+                System.out.println("\t  " + task);
+                System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
+                ui.printLine();
                 continue;
             }
 
@@ -127,19 +133,19 @@ public class Chad {
                 try {
                     String[] parts = input.substring(9).split(" /by ", 2);
                     if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
-                        throw new IllegalArgumentException();
+                        throw new ChadException("OOPS!!! Deadline format: deadline <desc> /by <time>");
                     }
 
                     Task t = new Deadline(parts[0].trim(), Date.inputDate(parts[1].trim()));
                     taskList.add(t);
-                    taskCounter++;
-                    save.save(taskList);
 
-                    System.out.println("\t___________________________________");
+                    save.save(taskList.getTasks());
+
+                    ui.printLine();
                     System.out.println("\tGot it. I've added this task:");
-                    System.out.println("\t  " + taskList.get(taskCounter - 1));
-                    System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
-                    System.out.println("\t___________________________________");
+                    System.out.println("\t  " + taskList.get(taskList.size() - 1));
+                    System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
+                    ui.printLine();
 
                 } catch (ChadException e) {
                     ui.printError("OOPS!!! Deadline format: deadline <desc> /by <time>");
@@ -152,25 +158,24 @@ public class Chad {
                 try {
                     String[] parts = input.substring(5).trim().split(" /from ", 2);
                     if (parts.length < 2 || parts[0].trim().isEmpty()) {
-                        throw new IllegalArgumentException();
+                        throw new ChadException("OOPS!!! Event format: event <desc> /from <start> /to <end>");
                     }
 
                     String[] times = parts[1].split(" /to ", 2);
                     if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
-                        throw new IllegalArgumentException();
+                        throw new ChadException("OOPS!!! Event format: event <desc> /from <start> /to <end>");
                     }
 
 
                     Task t = new Event(parts[0].trim(), Date.inputDate(times[0].trim()), Date.inputDate(times[1].trim()));
                     taskList.add(t);
-                    taskCounter++;
-                    save.save(taskList);
+                    save.save(taskList.getTasks());
 
-                    System.out.println("\t___________________________________");
+                    ui.printLine();
                     System.out.println("\tGot it. I've added this task:");
-                    System.out.println("\t  " + taskList.get(taskCounter - 1));
-                    System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
-                    System.out.println("\t___________________________________");
+                    System.out.println("\t  " + taskList.get(taskList.size() - 1));
+                    System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
+                    ui.printLine();
 
                 } catch (ChadException e) {
                     ui.printError("OOPS!!! Event format: event <desc> /from <start> /to <end>");
@@ -182,19 +187,18 @@ public class Chad {
             if (input.startsWith("delete ")) {
                 try {
                     int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                    if (index < 0 || index >= taskCounter) {
+                    if (index < 0 || index >= taskList.size()) {
                         throw new IllegalArgumentException();
                     }
 
                     Task removed = taskList.remove(index);
-                    taskCounter--;
-                    save.save(taskList);
+                    save.save(taskList.getTasks());
 
-                    System.out.println("\t___________________________________");
+                    ui.printLine();
                     System.out.println("\tNoted. I've removed this task:");
                     System.out.println("\t  " + removed);
-                    System.out.println("\tNow you have " + taskCounter + " tasks in the list.");
-                    System.out.println("\t___________________________________");
+                    System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
+                    ui.printLine();
 
                 } catch (ChadException e) {
                     ui.printError("Invalid task number for delete.");
