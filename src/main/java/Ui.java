@@ -33,7 +33,9 @@ public class Ui {
     }
 
     public void printError(String msg) {
+        printLine();
         System.out.println("\t" + msg);
+        printLine();
     }
 
     public void printFileLoadingError() {

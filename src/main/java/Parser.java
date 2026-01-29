@@ -18,42 +18,63 @@ public class Parser {
             }
 
             ui.printLine();
-            return;
         }
 
-        else if (input.startsWith("mark ")) {
+        else if (input.equals("mark") || input.startsWith("mark ")) {
+            String numberCheck = input.substring(4).trim();
+
+            if (numberCheck.isEmpty()) {
+                ui.printError("OOPS!!! Mark format: mark <task number>");
+                return;
+            }
+
             try {
-                int index = Integer.parseInt(input.substring(5).trim()) - 1;
+                int index = Integer.parseInt(numberCheck) - 1;
                 taskList.get(index).markAsDone();
-                save.save(taskList.getTasks()); 
+                save.save(taskList.getTasks());
+
                 ui.printLine();
                 System.out.println("\tNice! I've marked this task as done:");
                 System.out.println("\t  " + taskList.get(index));
                 ui.printLine();
+
+            } catch (NumberFormatException e) {
+                ui.printError("OOPS!!! Mark format: mark <task number>");
             } catch (ChadException e) {
                 ui.printError("OOPS!!! Invalid task number for mark.");
             }
         }
 
-        else if (input.startsWith("unmark ")) {
+        else if (input.equals("unmark") || input.startsWith("unmark ")) {
+            String numberCheck = input.substring(6).trim();
+
+            if (numberCheck.isEmpty()) {
+                ui.printError("OOPS!!! Unmark format: unmark <task number>");
+                return;
+            }
+
             try {
-                int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                int index = Integer.parseInt(numberCheck) - 1;
                 taskList.get(index).markAsNotDone();
-                save.save(taskList.getTasks()); 
+                save.save(taskList.getTasks());
 
                 ui.printLine();
                 System.out.println("\tOK, I've marked this task as not done yet:");
                 System.out.println("\t  " + taskList.get(index));
                 ui.printLine();
 
+            } catch (NumberFormatException e) {
+                ui.printError("OOPS!!! Unmark format: unmark <task number>");
             } catch (ChadException e) {
                 ui.printError("OOPS!!! Invalid task number for unmark.");
             }
         }
 
+
         else if (input.startsWith("todo")) {
-            if (input.length() <= 4) {
+            if (input.length() <= 4 || input.substring(4).trim().isEmpty()) {
                 ui.printError("OOPS!!! The description of a todo cannot be empty.");
+                return;
             }
 
             String desc = input.substring(5).trim();
@@ -72,28 +93,33 @@ public class Parser {
             ui.printLine();
         }
 
-        else if (input.startsWith("deadline")) {
+        else if (input.equals("deadline") || input.startsWith("deadline ")) {
             try {
-                String[] parts = input.substring(9).split(" /by ", 2);
+                String numberCheck = input.substring(8).trim();
+                if (numberCheck.isEmpty()) {
+                    throw new ChadException("OOPS!!! Deadline format: deadline <desc> /by <time>");
+                }
+
+                String[] parts = numberCheck.split("\\s+/by\\s+", 2);
                 if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
                     throw new ChadException("OOPS!!! Deadline format: deadline <desc> /by <time>");
                 }
 
                 Task t = new Deadline(parts[0].trim(), Date.inputDate(parts[1].trim()));
                 taskList.add(t);
-
                 save.save(taskList.getTasks());
 
                 ui.printLine();
                 System.out.println("\tGot it. I've added this task:");
-                System.out.println("\t  " + taskList.get(taskList.size() - 1));
+                System.out.println("\t  " + t);
                 System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
                 ui.printLine();
 
             } catch (ChadException e) {
-                ui.printError("OOPS!!! Deadline format: deadline <desc> /by <time>");
+                ui.printError(e.getMessage());
             }
         }
+
 
         else if (input.startsWith("event")) {
             try {
@@ -123,13 +149,16 @@ public class Parser {
             }
         }
 
-        else if (input.startsWith("delete ")) {
-            try {
-                int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                if (index < 0 || index >= taskList.size()) {
-                    throw new ChadException("Invalid task number for delete.");
-                }
+        else if (input.startsWith("delete")) {
+            String numberCheck = input.substring(6).trim();
 
+            if (numberCheck.isEmpty()) {
+                ui.printError("OOPS!!! Please specify which task to delete. Delete format: delete <task number>");
+                return;
+            }
+
+            try {
+                int index = Integer.parseInt(numberCheck) - 1;
                 Task removed = taskList.remove(index);
                 save.save(taskList.getTasks());
 
@@ -139,14 +168,15 @@ public class Parser {
                 System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
                 ui.printLine();
 
+            } catch (NumberFormatException e) {
+                ui.printError("OOPS!!! Delete format: delete <task number>");
             } catch (ChadException e) {
-                ui.printError("Invalid task number for delete.");
+                ui.printError(e.getMessage());
             }
         }
+
         else {
-            ui.printLine();
             ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
-            ui.printLine();
         }     
     }
 }
