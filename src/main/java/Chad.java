@@ -80,23 +80,24 @@ public class Chad {
             //     continue;
             // }
 
+            // Parser MoreOOP TOREMOVE
             // mark task as done tracker
-            if (input.startsWith("mark ")) {
-                try {
-                    int index = Integer.parseInt(input.substring(5).trim()) - 1;
-                    taskList.get(index).markAsDone();
-                    save.save(taskList.getTasks()); 
+            // if (input.startsWith("mark ")) {
+            //     try {
+            //         int index = Integer.parseInt(input.substring(5).trim()) - 1;
+            //         taskList.get(index).markAsDone();
+            //         save.save(taskList.getTasks()); 
 
-                    ui.printLine();
-                    System.out.println("\tNice! I've marked this task as done:");
-                    System.out.println("\t  " + taskList.get(index));
-                    ui.printLine();
+            //         ui.printLine();
+            //         System.out.println("\tNice! I've marked this task as done:");
+            //         System.out.println("\t  " + taskList.get(index));
+            //         ui.printLine();
 
-                } catch (ChadException e) {
-                    ui.printError("OOPS!!! Invalid task number for mark.");
-                }
-                continue;
-            }
+            //     } catch (ChadException e) {
+            //         ui.printError("OOPS!!! Invalid task number for mark.");
+            //     }
+            //     continue;
+            // }
 
             // unmark task as not done tracker
             if (input.startsWith("unmark ")) {
