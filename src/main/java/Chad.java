@@ -145,29 +145,29 @@ public class Chad {
             // }
 
             // deadline
-            if (input.startsWith("deadline")) {
-                try {
-                    String[] parts = input.substring(9).split(" /by ", 2);
-                    if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
-                        throw new ChadException("OOPS!!! Deadline format: deadline <desc> /by <time>");
-                    }
+            // if (input.startsWith("deadline")) {
+            //     try {
+            //         String[] parts = input.substring(9).split(" /by ", 2);
+            //         if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+            //             throw new ChadException("OOPS!!! Deadline format: deadline <desc> /by <time>");
+            //         }
 
-                    Task t = new Deadline(parts[0].trim(), Date.inputDate(parts[1].trim()));
-                    taskList.add(t);
+            //         Task t = new Deadline(parts[0].trim(), Date.inputDate(parts[1].trim()));
+            //         taskList.add(t);
 
-                    save.save(taskList.getTasks());
+            //         save.save(taskList.getTasks());
 
-                    ui.printLine();
-                    System.out.println("\tGot it. I've added this task:");
-                    System.out.println("\t  " + taskList.get(taskList.size() - 1));
-                    System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
-                    ui.printLine();
+            //         ui.printLine();
+            //         System.out.println("\tGot it. I've added this task:");
+            //         System.out.println("\t  " + taskList.get(taskList.size() - 1));
+            //         System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
+            //         ui.printLine();
 
-                } catch (ChadException e) {
-                    ui.printError("OOPS!!! Deadline format: deadline <desc> /by <time>");
-                }
-                continue;
-            }
+            //     } catch (ChadException e) {
+            //         ui.printError("OOPS!!! Deadline format: deadline <desc> /by <time>");
+            //     }
+            //     continue;
+            // }
 
             // event
             if (input.startsWith("event")) {
