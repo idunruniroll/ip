@@ -71,13 +71,13 @@ public class Save {
             if (parts.length < 4) {
                 throw new ChadException("Corrupted deadline line: " + line);
             }
-            task = new Deadline(desc, parts[3]);
+            task = new Deadline(desc, Date.inputDate(parts[3]));
 
         } else if (type.equals("E")) {
             if (parts.length < 5) {
                 throw new ChadException("Corrupted event line: " + line);
             }
-            task = new Event(desc, parts[3], parts[4]);
+            task = new Event(desc, Date.inputDate(parts[3]), Date.inputDate(parts[4]));
 
         } else {
             throw new ChadException("Unknown task type: " + type);
