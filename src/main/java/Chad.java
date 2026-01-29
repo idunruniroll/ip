@@ -6,6 +6,7 @@ public class Chad {
 
     public static void main(String[] args) {
         Ui ui = new Ui();
+        Parser parser = new Parser();
         // Scanner sc = new Scanner(System.in);
         Save save = new Save(Paths.get("data/chad.txt"));
         TaskList taskList;
@@ -40,16 +41,25 @@ public class Chad {
 
         // main loop
         while (true) {
-            String input = ui.input();   
-            if (input.equals("bye")) {
-                ui.exit();
-                break;
-                // More OOP TOREMOVE
-                // System.out.println("\t___________________________________");
-                // System.out.println("\tBye. Hope to see you again soon!");
-                // System.out.println("\t___________________________________");
-                // break;
-            }
+            String input = ui.input();
+            try {
+                parser.handle(input, taskList, ui, save);
+            } catch (ChadException e) {
+                if (!e.getMessage().equals("NOT_HANDLED")) {
+                    ui.printError(e.getMessage());
+                    continue;
+                }
+            }            
+            // Parser MoreOOP TOREMOVE
+            // if (input.equals("bye")) {
+            //     ui.exit();
+            //     break;
+            //     // More OOP TOREMOVE
+            //     // System.out.println("\t___________________________________");
+            //     // System.out.println("\tBye. Hope to see you again soon!");
+            //     // System.out.println("\t___________________________________");
+            //     // break;
+            // }
             
             // list tasks
             if (input.equals("list")) {
