@@ -2,19 +2,20 @@ package chad;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Saves the current task list to disk.
- *
- * @param tasks List of tasks to save.
- * @throws ChadException If saving fails.
  * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30
+ * @param tasks List of tasks to save.
+ * @throws ChadException If saving fails.
  */
 public class Save {
     private final Path filePath;
@@ -23,6 +24,14 @@ public class Save {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the data file.
+     *
+     * @return The list of tasks loaded from disk. Returns an empty list if the data
+     *         file does not exist.
+     * @throws ChadException If an I/O error occurs or the data file contains a
+     *                       corrupted line.
+     */
     public ArrayList<Task> load() throws ChadException {
         try {
             if (!Files.exists(filePath)) {
@@ -47,6 +56,12 @@ public class Save {
         }
     }
 
+    /**
+     * Saves the given list of tasks to the data file.
+     *
+     * @param tasks The list of tasks to save.
+     * @throws ChadException If an I/O error occurs while saving.
+     */
     public void save(List<Task> tasks) throws ChadException {
         try {
             Path parent = filePath.getParent();

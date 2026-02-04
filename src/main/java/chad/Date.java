@@ -20,8 +20,7 @@ public class Date {
     /**
      * Parses a user-provided date/time string into the app's internal
      * representation.
-     *
-     * @param input Date/time string provided by the user.
+     * 
      * @return Parsed date/time representation (e.g., LocalDate/LocalDateTime or
      *         formatted string).
      * @throws ChadException If the input format is invalid.
