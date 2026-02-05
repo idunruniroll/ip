@@ -53,7 +53,7 @@ public class Chad {
         if (input.trim().equalsIgnoreCase("bye")) {
             return "Bye. See you next time!";
         }
-        return "You said: " + input;
+        return "Chad heard: " + input;
     }
 
 }
