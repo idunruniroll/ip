@@ -44,4 +44,16 @@ public class Chad {
             }
         }
     }
+
+    public String getGreeting() {
+        return "Hello! I'm Chad.\nWhat can I do for you?";
+    }
+
+    public String getResponse(String input) {
+        if (input.trim().equalsIgnoreCase("bye")) {
+            return "Bye. See you next time!";
+        }
+        return "You said: " + input;
+    }
+
 }
