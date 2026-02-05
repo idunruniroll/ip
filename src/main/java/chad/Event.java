@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 /**
  * Represents an event task that occurs during a specific time range.
- * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 /**
  * Stores and manages the list of tasks in the application.
  * Provides operations such as add, remove, retrieve, and validate indexes.
- * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30
