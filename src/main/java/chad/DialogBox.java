@@ -47,15 +47,42 @@ public class DialogBox extends HBox {
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
+        dialog.getStyleClass().add("reply-label");
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
         return new DialogBox(text, img);
     }
 
-    public static DialogBox getChadDialog(String text, Image img) {
+    public static DialogBox getChadDialog(String text, Image img, String commandType) {
         var db = new DialogBox(text, img);
         db.flip();
+        db.changeDialogStyle(commandType);
         return db;
     }
+
+    private void changeDialogStyle(String commandType) {
+        dialog.getStyleClass().removeAll(
+                "add-label", "marked-label", "delete-label", "error-label");
+
+        switch (commandType) {
+            case "Todo":
+            case "Event":
+            case "Deadline":
+                dialog.getStyleClass().add("add-label");
+                break;
+
+            case "Mark":
+            case "Unmark":
+                dialog.getStyleClass().add("marked-label");
+                break;
+
+            case "Delete":
+                dialog.getStyleClass().add("delete-label");
+                break;
+
+            default:
+        }
+    }
+
 }
