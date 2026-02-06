@@ -3,7 +3,6 @@ package chad;
 /**
  * Represents a task with a description and completion status.
  * Subclasses provide additional fields such as deadlines or time ranges.
- * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 /**
  * Represents a task that must be completed by a specific date/time.
- * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30

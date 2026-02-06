@@ -10,12 +10,10 @@ import java.util.List;
 
 /**
  * Saves the current task list to disk.
- * 
  * @author Yi Qian
  * @version 1.0
- * @since 2025-01-30
- * @param tasks List of tasks to save.
  * @throws ChadException If saving fails.
+ * @since 2025-01-30
  */
 public class Save {
     private final Path filePath;
