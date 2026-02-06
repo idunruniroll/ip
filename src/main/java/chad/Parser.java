@@ -24,9 +24,7 @@ public class Parser {
         if (input.equals("bye")) {
             ui.exit();
             System.exit(0);
-        }
-
-        else if (input.equals("list")) {
+        } else if (input.equals("list")) {
             ui.printLine();
 
             if (taskList.size() == 0) {
@@ -38,9 +36,7 @@ public class Parser {
             }
 
             ui.printLine();
-        }
-
-        else if (input.equals("mark") || input.startsWith("mark ")) {
+        } else if (input.equals("mark") || input.startsWith("mark ")) {
             String numberCheck = input.substring(4).trim();
 
             if (numberCheck.isEmpty()) {
@@ -62,9 +58,7 @@ public class Parser {
             } catch (ChadException e) {
                 throw new ChadException("OOPS!!! Invalid task number for mark.");
             }
-        }
-
-        else if (input.equals("unmark") || input.startsWith("unmark ")) {
+        } else if (input.equals("unmark") || input.startsWith("unmark ")) {
             String numberCheck = input.substring(6).trim();
 
             if (numberCheck.isEmpty()) {
@@ -86,9 +80,7 @@ public class Parser {
             } catch (ChadException e) {
                 throw new ChadException("OOPS!!! Invalid task number for unmark.");
             }
-        }
-
-        else if (input.startsWith("todo")) {
+        } else if (input.startsWith("todo")) {
             if (input.length() <= 4 || input.substring(4).trim().isEmpty()) {
                 ui.printError("OOPS!!! The description of a todo cannot be empty.");
                 return;
@@ -108,9 +100,7 @@ public class Parser {
             System.out.println("\t  " + task);
             System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
             ui.printLine();
-        }
-
-        else if (input.equals("deadline") || input.startsWith("deadline ")) {
+        } else if (input.equals("deadline") || input.startsWith("deadline ")) {
             try {
                 String numberCheck = input.substring(8).trim();
                 if (numberCheck.isEmpty()) {
@@ -135,9 +125,7 @@ public class Parser {
             } catch (ChadException e) {
                 ui.printError(e.getMessage());
             }
-        }
-
-        else if (input.startsWith("event")) {
+        } else if (input.startsWith("event")) {
             try {
                 String[] parts = input.substring(5).trim().split(" /from ", 2);
                 if (parts.length < 2 || parts[0].trim().isEmpty()) {
@@ -162,9 +150,7 @@ public class Parser {
             } catch (ChadException e) {
                 ui.printError("OOPS!!! Event format: event <desc> /from <start> /to <end>");
             }
-        }
-
-        else if (input.startsWith("delete")) {
+        } else if (input.startsWith("delete")) {
             String numberCheck = input.substring(6).trim();
 
             if (numberCheck.isEmpty()) {
@@ -188,9 +174,7 @@ public class Parser {
             } catch (ChadException e) {
                 ui.printError(e.getMessage());
             }
-        }
-
-        else if (input.startsWith("find")) {
+        } else if (input.startsWith("find")) {
             String keyword = input.substring(4).trim();
 
             if (keyword.isEmpty()) {
@@ -210,9 +194,7 @@ public class Parser {
                 }
             }
             ui.printLine();
-        }
-
-        else {
+        } else {
             ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
         }
     }
