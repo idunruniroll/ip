@@ -3,7 +3,6 @@ package chad;
 /**
  * Represents a todo task that has only a description and no associated
  * date/time.
- * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30

@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 /**
  * Handles user interaction such as reading commands and printing messages.
- * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30
