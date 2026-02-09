@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 /**
  * Handles user interaction such as reading commands and printing messages.
+ * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30
@@ -58,6 +59,7 @@ public class Ui {
      */
     public void printError(String msg) {
         printLine();
+        assert msg != null : "Message to display should not be null";
         System.out.println("\t" + msg);
         printLine();
     }
