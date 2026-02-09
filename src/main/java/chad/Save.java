@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Saves the current task list to disk.
+ * 
  * @author Yi Qian
  * @version 1.0
  * @throws ChadException If saving fails.
@@ -19,6 +20,7 @@ public class Save {
     private final Path filePath;
 
     public Save(Path filePath) {
+        assert filePath != null : "File path should not be null";
         this.filePath = filePath;
     }
 
