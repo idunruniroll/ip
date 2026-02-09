@@ -1,10 +1,12 @@
 package chad;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Stores and manages the list of tasks in the application.
  * Provides operations such as add, remove, retrieve, and validate indexes.
+ * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30
@@ -76,15 +78,10 @@ public class TaskList {
      * @return List of matching tasks.
      */
     public ArrayList<Task> find(String keyword) {
-        ArrayList<Task> matches = new ArrayList<>();
         String k = keyword.toLowerCase();
-
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(k)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(k))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }
