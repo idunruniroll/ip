@@ -34,13 +34,28 @@ public class Chad {
     }
 
     public String getResponse(String input) {
+        // Assumption: caller should pass a String (GUI might, but we still guard)
+        // Keep your existing if-check for user-facing message.
         if (input == null) {
             commandType = "Empty";
             return "Error: input was null";
         }
 
+        // After this point, input is guaranteed non-null
+        assert parser != null : "Parser should be initialised before getResponse()";
+        assert tasks != null : "TaskList should be initialised before getResponse()";
+        assert ui != null : "Ui should be initialised before getResponse()";
+        assert save != null : "Save should be initialised before getResponse()";
+
         String trimmed = input.trim();
+
+        // Assumption: trimming a non-null string gives non-null
+        assert trimmed != null : "Trimmed input should not be null";
+
         setCommandTypeManually(trimmed);
+
+        // Assumption: we expect commandType to be set by setCommandTypeManually
+        assert commandType != null : "commandType should be set after setCommandTypeManually()";
 
         // GUI must NOT let Parser call System.exit(0)
         if (trimmed.equalsIgnoreCase("bye")) {
@@ -48,8 +63,9 @@ public class Chad {
             return "Bye. Hope to see you again soon!";
         }
 
-        // Capture everything Parser/Ui prints to System.out
         PrintStream originalOut = System.out;
+        assert originalOut != null : "System.out should not be null";
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream capture = new PrintStream(baos);
 
@@ -62,7 +78,10 @@ public class Chad {
             System.setOut(originalOut);
         }
 
-        return cleanOutput(baos.toString());
+        String out = baos.toString();
+        assert out != null : "Captured output string should not be null";
+
+        return cleanOutput(out);
     }
 
     public String getCommandType() {

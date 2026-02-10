@@ -5,6 +5,7 @@ import java.util.ArrayList;
 /**
  * Stores and manages the list of tasks in the application.
  * Provides operations such as add, remove, retrieve, and validate indexes.
+ * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30
@@ -39,6 +40,8 @@ public class TaskList {
         if (index < 0 || index >= tasks.size()) {
             throw new ChadException("OOPS!!! Invalid task number.");
         }
+        assert index >= 0 : "Index must be non-negative";
+        assert index < tasks.size() : "Index must be within bounds";
         return tasks.get(index);
     }
 
@@ -48,7 +51,9 @@ public class TaskList {
      * @param task Task to add.
      */
     public void add(Task task) {
+        assert task != null : "Task to add should not be null";
         tasks.add(task);
+        assert tasks.contains(task) : "Task should be in list after add";
     }
 
     /**

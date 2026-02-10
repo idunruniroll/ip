@@ -45,6 +45,8 @@ public class Parser {
 
             try {
                 int index = Integer.parseInt(numberCheck) - 1;
+                assert index >= 0 : "mark index should be non-negative";
+                assert index < taskList.size() : "mark index should be within taskList size";
                 taskList.get(index).markAsDone();
                 save.save(taskList.getTasks());
 
@@ -67,6 +69,8 @@ public class Parser {
 
             try {
                 int index = Integer.parseInt(numberCheck) - 1;
+                assert index >= 0 : "unmark index should be non-negative";
+                assert index < taskList.size() : "unmark index should be within taskList size";
                 taskList.get(index).markAsNotDone();
                 save.save(taskList.getTasks());
 
@@ -160,6 +164,8 @@ public class Parser {
 
             try {
                 int index = Integer.parseInt(numberCheck) - 1;
+                assert index >= 0 : "delete index should be non-negative";
+                assert index < taskList.size() : "delete index should be within taskList size";
                 Task removed = taskList.remove(index);
                 save.save(taskList.getTasks());
 
