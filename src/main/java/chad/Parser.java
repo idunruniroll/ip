@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Parses and executes user commands by coordinating TaskList, Ui, and Save.
- * 
+ *
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30
@@ -149,12 +149,6 @@ public class Parser {
                 "OOPS!!! Unmark format: unmark <task number>");
 
         assert index >= 0 : "unmark index should be non-negative";
-            try {
-                int index = Integer.parseInt(numberCheck) - 1;
-                assert index >= 0 : "mark index should be non-negative";
-                assert index < taskList.size() : "mark index should be within taskList size";
-                taskList.get(index).markAsDone();
-                save.save(taskList.getTasks());
 
         try {
             taskList.get(index).markAsNotDone();
@@ -185,12 +179,6 @@ public class Parser {
 
         Task task = new Todo(args);
         taskList.add(task);
-            try {
-                int index = Integer.parseInt(numberCheck) - 1;
-                assert index >= 0 : "unmark index should be non-negative";
-                assert index < taskList.size() : "unmark index should be within taskList size";
-                taskList.get(index).markAsNotDone();
-                save.save(taskList.getTasks());
 
         try {
             save.save(taskList.getTasks());
@@ -256,23 +244,6 @@ public class Parser {
             String[] times = parts[1].split(" /to ", 2);
             if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
                 throw new ChadException("OOPS!!! Event format: event <desc> /from <start> /to <end>");
-            try {
-                int index = Integer.parseInt(numberCheck) - 1;
-                assert index >= 0 : "delete index should be non-negative";
-                assert index < taskList.size() : "delete index should be within taskList size";
-                Task removed = taskList.remove(index);
-                save.save(taskList.getTasks());
-
-                ui.printLine();
-                System.out.println("\tNoted. I've removed this task:");
-                System.out.println("\t  " + removed);
-                System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
-                ui.printLine();
-
-            } catch (NumberFormatException e) {
-                ui.printError("OOPS!!! Delete format: delete <task number>");
-            } catch (ChadException e) {
-                ui.printError(e.getMessage());
             }
 
             Task t = new Event(parts[0].trim(),
@@ -283,7 +254,7 @@ public class Parser {
 
             ui.printLine();
             System.out.println("\tGot it. I've added this task:");
-            System.out.println("\t  " + taskList.get(taskList.size() - 1));
+            System.out.println("\t  " + t);
             System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
             ui.printLine();
         } catch (ChadException e) {
