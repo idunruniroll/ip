@@ -20,24 +20,12 @@ public class Parser {
     private static final String CMD_EVENT = "event";
     private static final String CMD_DELETE = "delete";
     private static final String CMD_FIND = "find";
-<<<<<<< HEAD
-=======
     private static final String CMD_NOTE = "note";
->>>>>>> branch-BCD-Extension
 
     /**
      * Handles a single line of user input by identifying the command and
      * delegating execution to the corresponding command handler.
      *
-<<<<<<< HEAD
-     * @param input    Raw user input string.
-     * @param taskList The task list containing all tasks.
-     * @param ui       UI component responsible for output.
-     * @param save     Storage component responsible for persistence.
-     * @throws ChadException If a command fails due to invalid input or state.
-     */
-    public void handle(String input, TaskList taskList, Ui ui, Save save) throws ChadException {
-=======
      * @param input       Raw user input string.
      * @param taskList    The task list containing all tasks.
      * @param ui          UI component responsible for output.
@@ -48,7 +36,6 @@ public class Parser {
      */
     public void handle(String input, TaskList taskList, Ui ui, Save save, NoteList noteList, NoteStorage noteStorage)
             throws ChadException {
->>>>>>> branch-BCD-Extension
         String trimmed = input.trim();
         String[] parts = trimmed.split("\\s+", 2);
 
@@ -93,13 +80,10 @@ public class Parser {
                 handleFind(args, taskList, ui);
                 break;
 
-<<<<<<< HEAD
-=======
             case CMD_NOTE:
                 handleNote(args, noteList, ui, noteStorage);
                 break;
 
->>>>>>> branch-BCD-Extension
             default:
                 ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 break;
@@ -347,8 +331,6 @@ public class Parser {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Handles note commands (add/list/delete/find).
      *
      * @param args        Note subcommand and arguments.
@@ -450,7 +432,6 @@ public class Parser {
     }
 
     /**
->>>>>>> branch-BCD-Extension
      * Parses a task index from a raw argument string.
      *
      * @param raw            Raw argument containing the index.

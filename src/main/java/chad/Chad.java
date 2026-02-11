@@ -48,15 +48,12 @@ public class Chad {
         }
         this.notes = loadedNotes;
 
-        noteStorage = new NoteStorage(Path.of("data", "notes.txt"));
-        NoteList loadedNotes;
         try {
             loadedNotes = noteStorage.load();
         } catch (ChadException e) {
             loadedNotes = new NoteList();
             ui.printError("OOPS!!! Failed to load notes.");
         }
-        notes = loadedNotes;
 
         TaskList loadedTasks;
         try {
