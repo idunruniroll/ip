@@ -2,6 +2,7 @@ package chad;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Chad {
@@ -10,6 +11,8 @@ public class Chad {
     private final Parser parser;
     private final Save save;
     private final TaskList tasks;
+    private final NoteList notes;
+    private final NoteStorage noteStorage;
 
     private String commandType;
 
@@ -17,6 +20,16 @@ public class Chad {
         ui = new Ui();
         parser = new Parser();
         save = new Save(Paths.get("data/chad.txt"));
+        this.noteStorage = new NoteStorage(Path.of("data", "notes.txt"));
+
+        NoteList loadedNotes;
+        try {
+            loadedNotes = noteStorage.load();
+        } catch (ChadException e) {
+            loadedNotes = new NoteList();
+            ui.printError("OOPS!!! Failed to load notes.");
+        }
+        this.notes = loadedNotes;
 
         TaskList loaded;
         try {
@@ -63,15 +76,15 @@ public class Chad {
             return "Bye. Hope to see you again soon!";
         }
 
+        // Capture everything Parser/Ui prints to System.out
         PrintStream originalOut = System.out;
         assert originalOut != null : "System.out should not be null";
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream capture = new PrintStream(baos);
 
         try {
             System.setOut(capture);
-            parser.handle(trimmed, tasks, ui, save);
+            parser.handle(trimmed, tasks, ui, save, notes, noteStorage);
         } catch (ChadException e) {
             return "Error: " + e.getMessage();
         } finally {
@@ -121,6 +134,9 @@ public class Chad {
                 break;
             case "find":
                 commandType = "Find";
+                break;
+            case "note":
+                commandType = "Note";
                 break;
             default:
                 commandType = "Unknown";
