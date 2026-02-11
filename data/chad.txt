@@ -1,2 +1,3 @@
 T | 0 | read book 1
 T | 0 | read book 3
+T | 0 | read book 3

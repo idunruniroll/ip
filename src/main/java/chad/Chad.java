@@ -2,37 +2,86 @@ package chad;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Main chatbot class that coordinates parsing, storage, and UI.
+ *
+ * Captures CLI output printed to System.out and converts it into a formatted
+ * String for GUI display.
+ *
+ * Loads and manages persistent task and note data.
+ *
+ * @author Yi Qian
+ * @version 1.0
+ * @since 2025-01-30
+ */
 public class Chad {
 
     private final Ui ui;
     private final Parser parser;
     private final Save save;
     private final TaskList tasks;
+    private final NoteList notes;
+    private final NoteStorage noteStorage;
 
     private String commandType;
 
+    /**
+     * Constructs a Chad instance and loads saved tasks and notes from disk.
+     *
+     * Falls back to empty lists if loading fails.
+     */
     public Chad() {
         ui = new Ui();
         parser = new Parser();
         save = new Save(Paths.get("data/chad.txt"));
 
-        TaskList loaded;
+        noteStorage = new NoteStorage(Path.of("data", "notes.txt"));
+        NoteList loadedNotes;
         try {
-            loaded = new TaskList(save.load());
+            loadedNotes = noteStorage.load();
         } catch (ChadException e) {
-            loaded = new TaskList();
-            // keep this printed for CLI; GUI will just ignore it
+            loadedNotes = new NoteList();
+            ui.printError("OOPS!!! Failed to load notes.");
+        }
+        notes = loadedNotes;
+
+        TaskList loadedTasks;
+        try {
+            loadedTasks = new TaskList(save.load());
+        } catch (ChadException e) {
+            loadedTasks = new TaskList();
             ui.printFileLoadingError();
         }
-        tasks = loaded;
+        tasks = loadedTasks;
+
+        assert ui != null : "Ui should be initialised";
+        assert parser != null : "Parser should be initialised";
+        assert save != null : "Save should be initialised";
+        assert tasks != null : "TaskList should be initialised";
+        assert notes != null : "NoteList should be initialised";
+        assert noteStorage != null : "NoteStorage should be initialised";
     }
 
+    /**
+     * Returns the greeting message displayed when the chatbot starts.
+     *
+     * @return Greeting message.
+     */
     public String getGreeting() {
         return "Hello! I'm Chad.\nWhat can I do for you?";
     }
 
+    /**
+     * Generates the chatbot's response to a user input.
+     *
+     * Captures CLI output and returns it as a formatted String.
+     *
+     * @param input Raw user input.
+     * @return Response message for GUI display.
+     */
     public String getResponse(String input) {
         if (input == null) {
             commandType = "Empty";
@@ -48,14 +97,13 @@ public class Chad {
             return "Bye. Hope to see you again soon!";
         }
 
-        // Capture everything Parser/Ui prints to System.out
         PrintStream originalOut = System.out;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream capture = new PrintStream(baos);
 
         try {
             System.setOut(capture);
-            parser.handle(trimmed, tasks, ui, save);
+            parser.handle(trimmed, tasks, ui, save, notes, noteStorage);
         } catch (ChadException e) {
             return "Error: " + e.getMessage();
         } finally {
@@ -65,15 +113,26 @@ public class Chad {
         return cleanOutput(baos.toString());
     }
 
+    /**
+     * Returns the most recently inferred command type.
+     *
+     * @return Command type.
+     */
     public String getCommandType() {
         return commandType;
     }
 
+    /**
+     * Infers and sets the command type based on the first word of input.
+     *
+     * @param trimmed Trimmed user input.
+     */
     private void setCommandTypeManually(String trimmed) {
         if (trimmed.isEmpty()) {
             commandType = "Empty";
             return;
         }
+
         String firstWord = trimmed.split("\\s+")[0].toLowerCase();
         switch (firstWord) {
             case "bye":
@@ -103,22 +162,31 @@ public class Chad {
             case "find":
                 commandType = "Find";
                 break;
+            case "note":
+                commandType = "Note";
+                break;
             default:
                 commandType = "Unknown";
                 break;
         }
     }
 
-    // Removes the separator lines + leading tabs so GUI looks nicer
+    /**
+     * Cleans captured CLI output for GUI display.
+     *
+     * Removes separator lines and leading tabs.
+     *
+     * @param raw Raw CLI output.
+     * @return Cleaned output.
+     */
     private String cleanOutput(String raw) {
         String[] lines = raw.replace("\r", "").split("\n");
         StringBuilder sb = new StringBuilder();
         for (String line : lines) {
             String t = line.trim();
-            if (t.matches("_+")) { // skip Ui.printLine()
+            if (t.matches("_+")) {
                 continue;
             }
-            // remove leading tabs used in CLI formatting
             sb.append(line.replaceFirst("^\\t+", "")).append("\n");
         }
         return sb.toString().trim();
