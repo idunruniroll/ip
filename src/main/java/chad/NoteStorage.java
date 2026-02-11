@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+<<<<<<< HEAD
 
 /**
  * Handles loading and saving notes to disk.
@@ -17,6 +18,20 @@ public class NoteStorage {
         this(Path.of("data", "notes.txt"));
     }
 
+=======
+
+/**
+ * Handles loading and saving notes to disk.
+ *
+ * @author Yi Qian
+ * @version 1.0
+ * @since 2025-02-11
+ */
+public class NoteStorage {
+
+    private final Path filePath;
+
+>>>>>>> branch-BCD-Extension
     /**
      * Creates a note storage using the given file path.
      *
@@ -27,10 +42,19 @@ public class NoteStorage {
     }
 
     /**
+<<<<<<< HEAD
      * Loads notes from disk. If the file does not exist, returns an empty list.
      *
      * @return Loaded note list.
      * @throws ChadException If file reading fails.
+=======
+     * Loads notes from disk.
+     *
+     * If the file does not exist, returns an empty list.
+     *
+     * @return Loaded note list.
+     * @throws ChadException If file reading fails or file format is invalid.
+>>>>>>> branch-BCD-Extension
      */
     public NoteList load() throws ChadException {
         try {
@@ -47,7 +71,11 @@ public class NoteStorage {
                     continue;
                 }
 
+<<<<<<< HEAD
                 // Expected: N | <text>
+=======
+                // Expected format: N | <text>
+>>>>>>> branch-BCD-Extension
                 String[] parts = trimmed.split("\\|", 2);
                 if (parts.length < 2 || !parts[0].trim().equals("N")) {
                     throw new ChadException("OOPS!!! Corrupted notes file.");

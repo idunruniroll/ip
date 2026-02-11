@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 T | 1 | read book 1
 E | 0 | tuff | 2026-02-06 | 2026-02-07
+=======
+T | 0 | read book 1
+T | 0 | read book 3
+T | 0 | read book 3
+>>>>>>> branch-BCD-Extension

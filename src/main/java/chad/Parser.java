@@ -20,11 +20,16 @@ public class Parser {
     private static final String CMD_EVENT = "event";
     private static final String CMD_DELETE = "delete";
     private static final String CMD_FIND = "find";
+<<<<<<< HEAD
+=======
+    private static final String CMD_NOTE = "note";
+>>>>>>> branch-BCD-Extension
 
     /**
      * Handles a single line of user input by identifying the command and
      * delegating execution to the corresponding command handler.
      *
+<<<<<<< HEAD
      * @param input    Raw user input string.
      * @param taskList The task list containing all tasks.
      * @param ui       UI component responsible for output.
@@ -32,6 +37,18 @@ public class Parser {
      * @throws ChadException If a command fails due to invalid input or state.
      */
     public void handle(String input, TaskList taskList, Ui ui, Save save) throws ChadException {
+=======
+     * @param input       Raw user input string.
+     * @param taskList    The task list containing all tasks.
+     * @param ui          UI component responsible for output.
+     * @param save        Storage component responsible for persistence.
+     * @param noteList    The list containing all notes.
+     * @param noteStorage Storage component responsible for note persistence.
+     * @throws ChadException If a command fails due to invalid input or state.
+     */
+    public void handle(String input, TaskList taskList, Ui ui, Save save, NoteList noteList, NoteStorage noteStorage)
+            throws ChadException {
+>>>>>>> branch-BCD-Extension
         String trimmed = input.trim();
         String[] parts = trimmed.split("\\s+", 2);
 
@@ -76,6 +93,13 @@ public class Parser {
                 handleFind(args, taskList, ui);
                 break;
 
+<<<<<<< HEAD
+=======
+            case CMD_NOTE:
+                handleNote(args, noteList, ui, noteStorage);
+                break;
+
+>>>>>>> branch-BCD-Extension
             default:
                 ui.printError("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 break;
@@ -323,6 +347,110 @@ public class Parser {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Handles note commands (add/list/delete/find).
+     *
+     * @param args        Note subcommand and arguments.
+     * @param noteList    The list containing all notes.
+     * @param ui          UI component for output.
+     * @param noteStorage Storage component responsible for note persistence.
+     * @throws ChadException If note command format or note index is invalid.
+     */
+    private void handleNote(String args, NoteList noteList, Ui ui, NoteStorage noteStorage) throws ChadException {
+        String trimmedArgs = args.trim();
+        if (trimmedArgs.isEmpty()) {
+            throw new ChadException("OOPS!!! Note format: note <add|list|delete|find> ...");
+        }
+
+        String[] parts = trimmedArgs.split("\\s+", 2);
+        String subCommand = parts[0];
+        String subArgs = parts.length == 2 ? parts[1].trim() : "";
+
+        switch (subCommand) {
+            case "add":
+                if (subArgs.isEmpty()) {
+                    throw new ChadException("OOPS!!! Note add format: note add <text>");
+                }
+                Note note = new Note(subArgs);
+                noteList.add(note);
+                noteStorage.save(noteList.getNotes());
+
+                ui.printLine();
+                System.out.println("\tGot it. I've added this note:");
+                System.out.println("\t  " + note);
+                ui.printLine();
+                break;
+
+            case "list":
+                ui.printLine();
+                if (noteList.size() == 0) {
+                    System.out.println("\tYou have no notes.");
+                } else {
+                    for (int i = 0; i < noteList.size(); i++) {
+                        System.out.println("\t" + (i + 1) + ". " + noteList.get(i));
+                    }
+                }
+                ui.printLine();
+                break;
+
+            case "delete":
+                int deleteIndex = parseNoteIndex(subArgs);
+                Note removed = noteList.remove(deleteIndex);
+                noteStorage.save(noteList.getNotes());
+
+                ui.printLine();
+                System.out.println("\tNoted. I've removed this note:");
+                System.out.println("\t  " + removed);
+                ui.printLine();
+                break;
+
+            case "find":
+                if (subArgs.isEmpty()) {
+                    throw new ChadException("OOPS!!! Note find format: note find <keyword>");
+                }
+                ArrayList<Note> matches = noteList.find(subArgs);
+
+                ui.printLine();
+                if (matches.isEmpty()) {
+                    System.out.println("\tNo matching notes found.");
+                } else {
+                    System.out.println("\tHere are the matching notes:");
+                    for (int i = 0; i < matches.size(); i++) {
+                        System.out.println("\t" + (i + 1) + ". " + matches.get(i));
+                    }
+                }
+                ui.printLine();
+                break;
+
+            default:
+                throw new ChadException("OOPS!!! Unknown note command.");
+        }
+    }
+
+    /**
+     * Parses a one-based note index string into a zero-based index.
+     *
+     * @param raw Raw note index.
+     * @return Zero-based note index.
+     * @throws ChadException If missing or not a valid positive integer.
+     */
+    private int parseNoteIndex(String raw) throws ChadException {
+        if (raw == null || raw.trim().isEmpty()) {
+            throw new ChadException("OOPS!!! Note delete format: note delete <note number>");
+        }
+
+        try {
+            int index = Integer.parseInt(raw.trim()) - 1;
+            assert index >= 0 : "note index should be non-negative";
+            return index;
+        } catch (NumberFormatException e) {
+            throw new ChadException("OOPS!!! Note delete format: note delete <note number>");
+        }
+    }
+
+    /**
+>>>>>>> branch-BCD-Extension
      * Parses a task index from a raw argument string.
      *
      * @param raw            Raw argument containing the index.
