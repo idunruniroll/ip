@@ -37,33 +37,51 @@ public class Chad {
         ui = new Ui();
         parser = new Parser();
         save = new Save(Paths.get("data/chad.txt"));
-        this.noteStorage = new NoteStorage(Path.of("data", "notes.txt"));
+        noteStorage = new NoteStorage(Path.of("data", "notes.txt"));
 
-        NoteList loadedNotes;
+        notes = loadNotesOrEmpty();
+        tasks = loadTasksOrEmpty();
+
+        assertInvariants();
+    }
+
+    /**
+     * Loads notes from storage.
+     * If loading fails, returns an empty {@link NoteList} and prints an error
+     * message.
+     *
+     * @return Loaded notes, or an empty list if loading fails.
+     */
+    private NoteList loadNotesOrEmpty() {
         try {
-            loadedNotes = noteStorage.load();
+            return noteStorage.load();
         } catch (ChadException e) {
-            loadedNotes = new NoteList();
             ui.printError("OOPS!!! Failed to load notes.");
+            return new NoteList();
         }
-        this.notes = loadedNotes;
+    }
 
+    /**
+     * Loads tasks from storage.
+     * If loading fails, returns an empty {@link TaskList} and prints a file loading
+     * error message.
+     *
+     * @return Loaded tasks, or an empty list if loading fails.
+     */
+    private TaskList loadTasksOrEmpty() {
         try {
-            loadedNotes = noteStorage.load();
+            return new TaskList(save.load());
         } catch (ChadException e) {
-            loadedNotes = new NoteList();
-            ui.printError("OOPS!!! Failed to load notes.");
-        }
-
-        TaskList loadedTasks;
-        try {
-            loadedTasks = new TaskList(save.load());
-        } catch (ChadException e) {
-            loadedTasks = new TaskList();
             ui.printFileLoadingError();
+            return new TaskList();
         }
-        tasks = loadedTasks;
+    }
 
+    /**
+     * Asserts that key components are initialized.
+     * These assertions are intended for development-time sanity checks.
+     */
+    private void assertInvariants() {
         assert ui != null : "Ui should be initialised";
         assert parser != null : "Parser should be initialised";
         assert save != null : "Save should be initialised";

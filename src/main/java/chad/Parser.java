@@ -331,83 +331,198 @@ public class Parser {
     }
 
     /**
-     * Handles note commands (add/list/delete/find).
+     * Handles the {@code note} command and dispatches to the relevant sub-command
+     * handler.
+     * 
+     * Supported sub-commands include: add, list, delete, find
+     * 
      *
-     * @param args        Note subcommand and arguments.
-     * @param noteList    The list containing all notes.
-     * @param ui          UI component for output.
-     * @param noteStorage Storage component responsible for note persistence.
-     * @throws ChadException If note command format or note index is invalid.
+     * @param args        Raw arguments following the {note} command.
+     * @param noteList    Note list to be mutated or queried.
+     * @param ui          Ui used to print feedback to the user.
+     * @param noteStorage Storage used to persist notes after changes.
+     * @throws ChadException If the note command format is invalid or an unknown
+     *                       sub-command is given.
      */
     private void handleNote(String args, NoteList noteList, Ui ui, NoteStorage noteStorage) throws ChadException {
-        String trimmedArgs = args.trim();
-        if (trimmedArgs.isEmpty()) {
-            throw new ChadException("OOPS!!! Note format: note <add|list|delete|find> ...");
-        }
+        NoteCommand cmd = parseNoteCommand(args);
 
-        String[] parts = trimmedArgs.split("\\s+", 2);
-        String subCommand = parts[0];
-        String subArgs = parts.length == 2 ? parts[1].trim() : "";
-
-        switch (subCommand) {
+        switch (cmd.action) {
             case "add":
-                if (subArgs.isEmpty()) {
-                    throw new ChadException("OOPS!!! Note add format: note add <text>");
-                }
-                Note note = new Note(subArgs);
-                noteList.add(note);
-                noteStorage.save(noteList.getNotes());
-
-                ui.printLine();
-                System.out.println("\tGot it. I've added this note:");
-                System.out.println("\t  " + note);
-                ui.printLine();
-                break;
-
+                handleNoteAdd(cmd.rest, noteList, ui, noteStorage);
+                return;
             case "list":
-                ui.printLine();
-                if (noteList.size() == 0) {
-                    System.out.println("\tYou have no notes.");
-                } else {
-                    for (int i = 0; i < noteList.size(); i++) {
-                        System.out.println("\t" + (i + 1) + ". " + noteList.get(i));
-                    }
-                }
-                ui.printLine();
-                break;
-
+                handleNoteList(noteList, ui);
+                return;
             case "delete":
-                int deleteIndex = parseNoteIndex(subArgs);
-                Note removed = noteList.remove(deleteIndex);
-                noteStorage.save(noteList.getNotes());
-
-                ui.printLine();
-                System.out.println("\tNoted. I've removed this note:");
-                System.out.println("\t  " + removed);
-                ui.printLine();
-                break;
-
+                handleNoteDelete(cmd.rest, noteList, ui, noteStorage);
+                return;
             case "find":
-                if (subArgs.isEmpty()) {
-                    throw new ChadException("OOPS!!! Note find format: note find <keyword>");
-                }
-                ArrayList<Note> matches = noteList.find(subArgs);
-
-                ui.printLine();
-                if (matches.isEmpty()) {
-                    System.out.println("\tNo matching notes found.");
-                } else {
-                    System.out.println("\tHere are the matching notes:");
-                    for (int i = 0; i < matches.size(); i++) {
-                        System.out.println("\t" + (i + 1) + ". " + matches.get(i));
-                    }
-                }
-                ui.printLine();
-                break;
-
+                handleNoteFind(cmd.rest, noteList, ui);
+                return;
             default:
                 throw new ChadException("OOPS!!! Unknown note command.");
         }
+    }
+
+    /**
+     * Parses the raw {@code note} arguments into a sub-command and its remaining
+     * arguments.
+     *
+     * @param args Raw arguments following the {@code note} command.
+     * @return A {@link NoteCommand} containing the sub-command and remaining
+     *         arguments.
+     * @throws ChadException If no sub-command is provided.
+     */
+    private NoteCommand parseNoteCommand(String args) throws ChadException {
+        String trimmed = args.trim();
+        if (trimmed.isEmpty()) {
+            throw new ChadException("OOPS!!! Note format: note <add|list|delete|find> ...");
+        }
+
+        String[] parts = trimmed.split("\\s+", 2);
+        String action = parts[0];
+        String rest = (parts.length == 2) ? parts[1].trim() : "";
+        return new NoteCommand(action, rest);
+    }
+
+    /**
+     * Represents a parsed note sub-command and its remaining arguments.
+     */
+    private static class NoteCommand {
+        /** The note sub-command action (e.g. {@code add}, {@code list}). */
+        final String action;
+
+        /** The remaining arguments after the action. */
+        final String rest;
+
+        /**
+         * Creates a parsed note command container.
+         *
+         * @param action The note sub-command action.
+         * @param rest   Remaining arguments after the action.
+         */
+        NoteCommand(String action, String rest) {
+            this.action = action;
+            this.rest = rest;
+        }
+    }
+
+    /**
+     * Adds a note with the given text, persists the updated list, and prints
+     * confirmation.
+     *
+     * @param text        Note text to add.
+     * @param noteList    Note list to add into.
+     * @param ui          Ui used to print feedback to the user.
+     * @param noteStorage Storage used to persist notes after the add.
+     * @throws ChadException If the note text is missing or empty.
+     */
+    private void handleNoteAdd(String text, NoteList noteList, Ui ui, NoteStorage noteStorage) throws ChadException {
+        requireNonEmpty(text, "OOPS!!! Note add format: note add <text>");
+
+        Note note = new Note(text);
+        noteList.add(note);
+        noteStorage.save(noteList.getNotes());
+
+        printBox(ui,
+                "\tGot it. I've added this note:",
+                "\t  " + note);
+    }
+
+    /**
+     * Prints all notes currently in the note list.
+     * Prints a suitable message if the list is empty.
+     *
+     * @param noteList Note list to display.
+     * @param ui       Ui used to print separators and feedback to the user.
+     */
+    private void handleNoteList(NoteList noteList, Ui ui) throws ChadException {
+        if (noteList.size() == 0) {
+            printBox(ui, "\tYou have no notes.");
+            return;
+        }
+
+        ui.printLine();
+        for (int i = 0; i < noteList.size(); i++) {
+            System.out.println("\t" + (i + 1) + ". " + noteList.get(i));
+        }
+        ui.printLine();
+    }
+
+    /**
+     * Deletes the note at the index specified by the arguments, persists the
+     * updated list,
+     * and prints confirmation.
+     *
+     * @param subArgs     Arguments that contain the note index to delete.
+     * @param noteList    Note list to remove from.
+     * @param ui          Ui used to print feedback to the user.
+     * @param noteStorage Storage used to persist notes after deletion.
+     * @throws ChadException If the index is missing/invalid or out of range.
+     */
+    private void handleNoteDelete(String subArgs, NoteList noteList, Ui ui, NoteStorage noteStorage)
+            throws ChadException {
+        int deleteIndex = parseNoteIndex(subArgs);
+        Note removed = noteList.remove(deleteIndex);
+        noteStorage.save(noteList.getNotes());
+
+        printBox(ui,
+                "\tNoted. I've removed this note:",
+                "\t  " + removed);
+    }
+
+    /**
+     * Finds notes containing the given keyword and prints the matching results.
+     *
+     * @param keyword  Keyword to search for.
+     * @param noteList Note list to search within.
+     * @param ui       Ui used to print feedback to the user.
+     * @throws ChadException If the keyword is missing or empty.
+     */
+    private void handleNoteFind(String keyword, NoteList noteList, Ui ui) throws ChadException {
+        requireNonEmpty(keyword, "OOPS!!! Note find format: note find <keyword>");
+
+        ArrayList<Note> matches = noteList.find(keyword);
+        if (matches.isEmpty()) {
+            printBox(ui, "\tNo matching notes found.");
+            return;
+        }
+
+        ui.printLine();
+        System.out.println("\tHere are the matching notes:");
+        for (int i = 0; i < matches.size(); i++) {
+            System.out.println("\t" + (i + 1) + ". " + matches.get(i));
+        }
+        ui.printLine();
+    }
+
+    /**
+     * Validates that the given string is not {@code null} or blank.
+     *
+     * @param s        String to validate.
+     * @param errorMsg Error message to use if validation fails.
+     * @throws ChadException If {@code s} is {@code null} or blank.
+     */
+    private void requireNonEmpty(String s, String errorMsg) throws ChadException {
+        if (s == null || s.trim().isEmpty()) {
+            throw new ChadException(errorMsg);
+        }
+    }
+
+    /**
+     * Prints a bordered message block using {@link Ui#printLine()} before and
+     * after.
+     *
+     * @param ui    Ui used to print separator lines.
+     * @param lines Lines to print inside the box.
+     */
+    private void printBox(Ui ui, String... lines) {
+        ui.printLine();
+        for (String line : lines) {
+            System.out.println(line);
+        }
+        ui.printLine();
     }
 
     /**
