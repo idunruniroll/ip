@@ -20,11 +20,12 @@ public class Main extends Application {
         try {
             stage.setMinHeight(220);
             stage.setMinWidth(417);
+            stage.setTitle("Chad");
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setChad(chad); // inject the Chad instance
+            fxmlLoader.<chad.MainWindow>getController().setChad(chad); // inject the Chad instance
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

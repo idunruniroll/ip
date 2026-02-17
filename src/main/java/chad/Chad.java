@@ -96,7 +96,7 @@ public class Chad {
      * @return Greeting message.
      */
     public String getGreeting() {
-        return "Hello! I'm Chad.\nWhat can I do for you?";
+        return ui.getIntroMessage();
     }
 
     /**

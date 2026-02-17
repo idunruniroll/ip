@@ -13,21 +13,37 @@ public class Ui {
     private final Scanner sc = new Scanner(System.in);
 
     /**
+     * Returns the welcome message shown at the start of the program (GUI-friendly).
+     *
+     * @return Welcome message.
+     */
+    public String getIntroMessage() {
+        String logo = """
+                         _                  _
+                        | |                 | |
+                   ___| | __   __ _  __| |
+                  / __| '_ \\ /  _` | / _` |
+                 | (__|  | | |  (_| |  | (_| |
+                  \\___|_| |_|\\__,_|\\__,_|
+                """;
+        return "Hello! I'm Chad.\nWhat can I do for you?\nType 'help' for a list of commands.\n" + logo;
+    }
+
+    /**
      * Prints the welcome message and ASCII logo shown at the start of the program.
      */
     public void intro() {
         String logo = """
                        _               _
                       | |             | |
-                   ___| |__   __ _  __| |
+                   ___| |__   __ _ __| |
                   / __| '_ \\ / _` |/ _` |
                  | (__| | | | (_| | (_| |
                   \\___|_| |_|\\__,_|\\__,_|
                 """;
 
         printLine();
-        System.out.println("Hello! I'm Chad");
-        System.out.println("What can I do for you?");
+        System.out.println(getIntroMessage());
         System.out.println(logo);
         printLine();
     }

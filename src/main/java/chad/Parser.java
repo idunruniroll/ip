@@ -21,6 +21,7 @@ public class Parser {
     private static final String CMD_DELETE = "delete";
     private static final String CMD_FIND = "find";
     private static final String CMD_NOTE = "note";
+    private static final String CMD_HELP = "help";
 
     /**
      * Handles a single line of user input by identifying the command and
@@ -82,6 +83,10 @@ public class Parser {
 
             case CMD_NOTE:
                 handleNote(args, noteList, ui, noteStorage);
+                break;
+
+            case CMD_HELP:
+                showHelp(ui);
                 break;
 
             default:
@@ -565,5 +570,24 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new ChadException(numberErrorMsg);
         }
+    }
+
+    /**
+     * Prints the help message showing available commands and their formats.
+     */
+    private void showHelp(Ui ui) {
+        ui.printLine();
+        System.out.println("\tHere are the available commands:");
+        System.out.println("\t  list");
+        System.out.println("\t  todo <description>");
+        System.out.println("\t  deadline <description> /by <yyyy-mm-dd>");
+        System.out.println("\t  event <description> /from <yyyy-mm-dd> /to <yyyy-mm-dd>");
+        System.out.println("\t  mark <index>");
+        System.out.println("\t  unmark <index>");
+        System.out.println("\t  delete <index>");
+        System.out.println("\t  find <keyword>");
+        System.out.println("\t  note <add|list|delete|find> ...");
+        System.out.println("\t  bye");
+        ui.printLine();
     }
 }
