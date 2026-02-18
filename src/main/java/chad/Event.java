@@ -1,9 +1,11 @@
 package chad;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Represents an event task that occurs during a specific time range.
+ * 
  * @author Yi Qian
  * @version 1.0
  * @since 2025-01-30
@@ -43,5 +45,47 @@ public class Event extends Task {
     @Override
     public String toSaveString() {
         return "E | " + (getIsDone() ? "1" : "0") + " | " + getDescription() + " | " + from + " | " + to;
+    }
+
+    /**
+     * Checks equality based on the description and time range of the event. Two
+     * event
+     * tasks are considered equal if they have the same description and time range,
+     * regardless
+     * of their completion status. This allows for identifying duplicate tasks based
+     * on their content
+     * and scheduled time.
+     * 
+     * @param o The object to compare with this event task.
+     * @return true if the given object is an event task with the same description
+     *         and time
+     *         range, false otherwise.
+     * 
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Event)) {
+            return false;
+        }
+        Event other = (Event) o;
+        return Objects.equals(this.getDescription(), other.getDescription())
+                && Objects.equals(this.from, other.from)
+                && Objects.equals(this.to, other.to);
+    }
+
+    /**
+     * Generates a hash code based on the description and time range of the event.
+     * This is consistent with the equals method, which considers two event tasks
+     * equal
+     * if they have the same description and time range.
+     * 
+     * @return A hash code value for this event task.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDescription(), from, to);
     }
 }

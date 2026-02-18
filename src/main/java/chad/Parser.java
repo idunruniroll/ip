@@ -192,6 +192,11 @@ public class Parser {
         }
 
         Task task = new Todo(args);
+
+        if (taskList.contains(task)) {
+            ui.printError("OOPS!!! This task already exists in your list.");
+            return;
+        }
         taskList.add(task);
 
         try {
@@ -227,6 +232,10 @@ public class Parser {
             }
 
             Task t = new Deadline(parts[0].trim(), Date.inputDate(parts[1].trim()));
+
+            if (taskList.contains(t)) {
+                throw new ChadException("OOPS!!! This task already exists in your list.");
+            }
             taskList.add(t);
             save.save(taskList.getTasks());
 
@@ -266,6 +275,10 @@ public class Parser {
             requireToNotBeforeFrom(from, to);
 
             Task t = new Event(parts[0].trim(), from, to);
+
+            if (taskList.contains(t)) {
+                throw new ChadException("OOPS!!! This task already exists in your list.");
+            }
 
             taskList.add(t);
             save.save(taskList.getTasks());

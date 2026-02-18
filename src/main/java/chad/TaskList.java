@@ -88,4 +88,19 @@ public class TaskList {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * Checks if the list contains a task that is equal to the given task.
+     * 
+     * @param task
+     * @return
+     */
+    public boolean contains(Task task) {
+        for (Task t : tasks) {
+            if (t.equals(task)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
