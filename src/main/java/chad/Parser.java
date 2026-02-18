@@ -1,5 +1,6 @@
 package chad;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -259,9 +260,13 @@ public class Parser {
                 throw new ChadException("OOPS!!! Event format: event <desc> /from <start> /to <end>");
             }
 
-            Task t = new Event(parts[0].trim(),
-                    Date.inputDate(times[0].trim()),
-                    Date.inputDate(times[1].trim()));
+            LocalDate from = Date.inputDate(times[0].trim());
+            LocalDate to = Date.inputDate(times[1].trim());
+
+            requireToNotBeforeFrom(from, to);
+
+            Task t = new Event(parts[0].trim(), from, to);
+
             taskList.add(t);
             save.save(taskList.getTasks());
 
@@ -271,7 +276,16 @@ public class Parser {
             System.out.println("\tNow you have " + taskList.size() + " tasks in the list.");
             ui.printLine();
         } catch (ChadException e) {
-            ui.printError("OOPS!!! Event format: event <desc> /from <start> /to <end>");
+            ui.printError(e.getMessage());
+        }
+    }
+
+    private void requireToNotBeforeFrom(LocalDate from, LocalDate to) throws ChadException {
+        assert from != null : "from date should not be null";
+        assert to != null : "to date should not be null";
+
+        if (to.isBefore(from)) { // implement isBefore in your Date class (see below)
+            throw new ChadException("OOPS!!! Event end date must be on or after start date.");
         }
     }
 
