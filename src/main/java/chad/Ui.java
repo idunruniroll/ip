@@ -94,7 +94,7 @@ public class Ui {
      */
     public void exit() {
         printLine();
-        System.out.println("\tBye. Hope to see you again soon!");
+        System.out.println("\tBye. Hope to see you again soon! \n\tExiting in 2 seconds...");
         printLine();
     }
 }

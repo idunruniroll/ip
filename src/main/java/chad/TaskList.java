@@ -47,12 +47,17 @@ public class TaskList {
     }
 
     /**
-     * Adds a task to the list.
+     * Adds a task to the list after checking for duplicates.
      *
      * @param task Task to add.
+     * @throws ChadException If a duplicate task is detected.
      */
-    public void add(Task task) {
+    public void add(Task task) throws ChadException {
         assert task != null : "Task to add should not be null";
+
+        if (contains(task)) {
+            throw new ChadException("OOPS!!! This task already exists in your list.");
+        }
         tasks.add(task);
         assert tasks.contains(task) : "Task should be in list after add";
     }
@@ -86,6 +91,24 @@ public class TaskList {
         return tasks.stream()
                 .filter(task -> task.getDescription().toLowerCase().contains(k))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Returns the indexes of tasks that contain the given keyword.
+     *
+     * @param keyword Keyword to search for.
+     * @return List of 0-based indexes of matching tasks.
+     */
+    public ArrayList<Integer> findIndexes(String keyword) {
+        String k = keyword.toLowerCase();
+
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getDescription().toLowerCase().contains(k)) {
+                indexes.add(i);
+            }
+        }
+        return indexes;
     }
 
     /**

@@ -99,6 +99,26 @@ public class NoteList {
     }
 
     /**
+     * Returns the indexes of notes that contain the given keyword.
+     *
+     * @param keyword Keyword to search for.
+     * @return List of 0-based indexes of matching notes.
+     */
+    public ArrayList<Integer> findIndexes(String keyword) {
+        String k = keyword.toLowerCase();
+
+        ArrayList<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < notes.size(); i++) {
+            // Use whatever field you search on; easiest is toString() if it includes
+            // title/content.
+            if (notes.get(i).toString().toLowerCase().contains(k)) {
+                indexes.add(i);
+            }
+        }
+        return indexes;
+    }
+
+    /**
      * Validates that the index is within bounds.
      *
      * @param index Zero-based index.

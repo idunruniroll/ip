@@ -197,7 +197,12 @@ public class Parser {
             ui.printError("OOPS!!! This task already exists in your list.");
             return;
         }
-        taskList.add(task);
+        try {
+            taskList.add(task);
+        } catch (ChadException e) {
+            ui.printError("OOPS!!! Failed to add task.");
+            return;
+        }
 
         try {
             save.save(taskList.getTasks());
@@ -348,15 +353,15 @@ public class Parser {
             return;
         }
 
-        ArrayList<Task> matches = taskList.find(args);
+        ArrayList<Integer> matchIndexes = taskList.findIndexes(args);
 
         ui.printLine();
-        if (matches.size() == 0) {
+        if (matchIndexes.isEmpty()) {
             System.out.println("\tNo matching tasks found.");
         } else {
             System.out.println("\tHere are the matching tasks in your list:");
-            for (int i = 0; i < matches.size(); i++) {
-                System.out.println("\t" + (i + 1) + ". " + matches.get(i));
+            for (int idx : matchIndexes) {
+                System.out.println("\t" + (idx + 1) + ". " + taskList.getTasks().get(idx));
             }
         }
         ui.printLine();
@@ -515,16 +520,17 @@ public class Parser {
     private void handleNoteFind(String keyword, NoteList noteList, Ui ui) throws ChadException {
         requireNonEmpty(keyword, "OOPS!!! Note find format: note find <keyword>");
 
-        ArrayList<Note> matches = noteList.find(keyword);
-        if (matches.isEmpty()) {
+        ArrayList<Integer> matchIndexes = noteList.findIndexes(keyword); // 0-based indexes
+
+        if (matchIndexes.isEmpty()) {
             printBox(ui, "\tNo matching notes found.");
             return;
         }
 
         ui.printLine();
         System.out.println("\tHere are the matching notes:");
-        for (int i = 0; i < matches.size(); i++) {
-            System.out.println("\t" + (i + 1) + ". " + matches.get(i));
+        for (int idx : matchIndexes) {
+            System.out.println("\t" + (idx + 1) + ". " + noteList.get(idx));
         }
         ui.printLine();
     }

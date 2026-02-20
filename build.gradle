@@ -64,3 +64,7 @@ run{
 checkstyle {
     toolVersion = '11.0.0'
 }
+
+tasks.withType(JavaExec) {
+    jvmArgs '-ea'
+}

@@ -8,6 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 /**
  * Controller for the main GUI.
@@ -62,7 +64,12 @@ public class MainWindow extends AnchorPane {
         userInput.clear();
 
         if (input.trim().equalsIgnoreCase("bye")) {
-            Platform.exit();
+            userInput.setDisable(true);
+            sendButton.setDisable(true);
+
+            PauseTransition delay = new PauseTransition(Duration.seconds(2));
+            delay.setOnFinished(e -> Platform.exit());
+            delay.play();
         }
     }
 }
