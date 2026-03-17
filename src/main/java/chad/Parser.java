@@ -135,13 +135,18 @@ public class Parser {
         assert index >= 0 : "mark index should be non-negative";
 
         try {
-            taskList.get(index).markAsDone();
-            save.save(taskList.getTasks());
+            if (taskList.get(index).getIsDone()) {
+                ui.printError("OOPS!!! This task is already marked as done.");
+                return;
+            } else {
+                taskList.get(index).markAsDone();
+                save.save(taskList.getTasks());
 
-            ui.printLine();
-            System.out.println("\tNice! I've marked this task as done:");
-            System.out.println("\t  " + taskList.get(index));
-            ui.printLine();
+                ui.printLine();
+                System.out.println("\tNice! I've marked this task as done:");
+                System.out.println("\t  " + taskList.get(index));
+                ui.printLine();
+            }
         } catch (ChadException e) {
             throw new ChadException("OOPS!!! Invalid task number for mark.");
         }
@@ -165,13 +170,18 @@ public class Parser {
         assert index >= 0 : "unmark index should be non-negative";
 
         try {
-            taskList.get(index).markAsNotDone();
-            save.save(taskList.getTasks());
+            if (!taskList.get(index).getIsDone()) {
+                ui.printError("OOPS!!! This task is already marked as not done.");
+                return;
+            } else {
+                taskList.get(index).markAsNotDone();
+                save.save(taskList.getTasks());
 
-            ui.printLine();
-            System.out.println("\tOK, I've marked this task as not done yet:");
-            System.out.println("\t  " + taskList.get(index));
-            ui.printLine();
+                ui.printLine();
+                System.out.println("\tOK, I've marked this task as not done yet:");
+                System.out.println("\t  " + taskList.get(index));
+                ui.printLine();
+            }
         } catch (ChadException e) {
             throw new ChadException("OOPS!!! Invalid task number for unmark.");
         }
