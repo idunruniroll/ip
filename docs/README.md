@@ -8,7 +8,7 @@ Chad is a chatbot that helps you manage **tasks** and **notes** in one place.
 
 1. Download the app [here](https://github.com/idunruniroll/ip/releases/download/v1.2/chad.jar)
 2. Open a terminal where the app is stored.
-3. Type 'java -jar chad.jar' into the terminal to launch the app.
+3. Type `java -jar chad.jar` into the terminal to launch the app.
 4. Type a command into the input box at the bottom.
 5. Press **Enter** or click **Send**.
 6. Chad replies in the chat window.
