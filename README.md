@@ -1,6 +1,6 @@
-# Chad User Guide (GUI)
+# Chad User Guide
 
-Chad is a **GUI-only** chatbot that helps you manage **tasks** and **notes** in one place.
+Chad is a chatbot that helps you manage **tasks** and **notes** in one place.
 
 ---
 
